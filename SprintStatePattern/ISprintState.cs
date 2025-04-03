@@ -11,7 +11,7 @@ namespace AvansDevOps.SprintStatePattern
         void StartSprint();
         void StopSprint();
         void StartRelease();
-        void UploadSummary();
+        void UploadSummary(string summary);
 
     }
 }

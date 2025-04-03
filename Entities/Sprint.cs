@@ -17,6 +17,7 @@ namespace AvansDevOps.Entities
         private PipelineTemplate pipeline;
         private ISprintState state;
         private Project project;
+        private string summary;
 
         public Sprint(string name, DateTime startDate, DateTime endDate, PipelineTemplate pipeline, Project project)
         {
@@ -27,6 +28,7 @@ namespace AvansDevOps.Entities
             this.pipeline = pipeline;
             this.state = new ConceptSprintState(this);
             this.project = project;
+            this.summary = "";
         }
 
         public string GetName()
@@ -54,14 +56,45 @@ namespace AvansDevOps.Entities
             this.state.StopSprint();
         }
 
-        public void UploadSummary()
+        public void UploadSummary(string summary)
         {
-            this.state.UploadSummary();
+            this.state.UploadSummary(summary);
         }
 
         public void StartRelease()
         {
             this.state.StartRelease();
+        }
+
+        public void AddStepToPipeline(IPipelineStep step)
+        {
+            this.pipeline.AddStep(step);
+        }
+
+        public void RemoveStepFromPipeline(IPipelineStep step)
+        {
+            this.pipeline.RemoveStep(step);
+        }
+
+        public List<IPipelineStep> GetPipelineSteps()
+        {
+            return this.pipeline.GetSteps();
+        }
+
+        public void RunPipeline()
+        {
+            this.pipeline.RunPipeline();
+        }
+
+        public void SetState(ISprintState state)
+        {
+            this.state = state;
+
+        }
+
+        public void SetSummary(string summary)
+        {
+            this.summary = summary;
         }
     }
 }

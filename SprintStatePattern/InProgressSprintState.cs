@@ -13,7 +13,7 @@ namespace AvansDevOps.SprintStatePattern
 
         public void StartRelease()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Sprint not over yet. Wait until the sprint has been stopped to start release");
         }
 
         public void StartSprint()
@@ -27,9 +27,9 @@ namespace AvansDevOps.SprintStatePattern
             _sprint.SetState(new StoppedSprintState(_sprint));
         }
 
-        public void UploadSummary()
+        public void UploadSummary(string summary)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Sprint not over yet. Wait until the sprint has been stopped to upload a summary");
         }
     }
 }

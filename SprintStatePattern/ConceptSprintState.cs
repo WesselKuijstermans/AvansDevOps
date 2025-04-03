@@ -13,22 +13,23 @@ namespace AvansDevOps.SprintStatePattern
 
         public void StartRelease()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Sprint not started yet. Wait until the sprint is done to start release");
         }
 
         public void StartSprint()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Starting sprint");
+            _sprint.SetState(new InProgressSprintState(_sprint));
         }
 
         public void StopSprint()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Cannot stop sprint, because it has not started yet");
         }
 
-        public void UploadSummary()
+        public void UploadSummary(string summary)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Sprint not started yet. Wait until the sprint is done to upload a summary");
         }
     }
 }

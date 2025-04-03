@@ -26,7 +26,7 @@ namespace AvansDevOps.SprintStatePattern
             Console.WriteLine("Sprint has been finalized. No more changes can be made.");
         }
 
-        public void UploadSummary()
+        public void UploadSummary(string summary)
         {
             Console.WriteLine("Sprint has been finalized. No more changes can be made.");
         }

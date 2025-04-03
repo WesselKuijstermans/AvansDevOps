@@ -13,7 +13,10 @@ namespace AvansDevOps.SprintStatePattern
 
         public void StartRelease()
         {
-            throw new NotImplementedException();
+            _sprint.RunPipeline();
+            Console.WriteLine("Release started.");
+            Console.WriteLine("Sprint has been stopped. No more changes can be made.");
+            _sprint.SetState(new FinishedSprintState(_sprint));
         }
 
         public void StartSprint()
@@ -26,9 +29,12 @@ namespace AvansDevOps.SprintStatePattern
             Console.WriteLine("Cannot stop Sprint. Sprint has already ended.");
         }
 
-        public void UploadSummary()
+        public void UploadSummary(string summary)
         {
-            throw new NotImplementedException();
+            _sprint.SetSummary(summary);
+            Console.WriteLine("Summary uploaded.");
+            Console.WriteLine("Sprint has been stopped. No more changes can be made.");
+            _sprint.SetState(new FinishedSprintState(_sprint));
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using AvansDevOps.ItemStatePattern;
+using AvansDevOps.SprintStateObersverPattern;
+using AvansDevOps.SprintStatePattern;
 using AvansDevOps.StateObserverPattern;
 using AvansDevOps.TemplatePattern;
 using System;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class Project: IItemStateObserver
+    internal class Project: IItemStateObserver, ISprintStateObserver
     {
         private string name;
         private List<TeamMember> teamMembers;
@@ -70,7 +72,7 @@ namespace AvansDevOps.Entities
             return backlog;
         }
 
-        public void Update(IItemState newState, SprintItem item)
+        public void ItemUpdate(IItemState newState, SprintItem item)
         {
             string message = "The item " + item.GetBacklogItem().GetTask() + " from the project '" + this.name + "' is now in state " + newState.GetType().Name;
             switch (newState)
@@ -83,6 +85,21 @@ namespace AvansDevOps.Entities
                     break;
                 case TodoState:
                     NotifyDevelopers(message);
+                    break;
+            }
+        }
+
+        public void SprintUpdate(ISprintState newState, Sprint sprint)
+        {
+            string message = "The sprint " + sprint.GetName() + " from the project '" + this.name + "' is now in state " + newState.GetType().Name;
+            switch (newState)
+            {
+                case DoneState:
+                    NotifySrumMaster(message);
+                    break;
+                case InProgressSprintState:
+                    break;
+                case StoppedSprintState:
                     break;
             }
         }
