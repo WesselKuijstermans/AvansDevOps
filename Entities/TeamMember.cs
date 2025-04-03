@@ -1,0 +1,31 @@
+﻿using AvansDevOps.Adapter;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AvansDevOps.Entities
+{
+    internal abstract class TeamMember
+    {
+        private string name;
+        private INotificationAdapter notificationChannel;
+
+        public TeamMember(string name, INotificationAdapter noticationChannel)
+        {
+            this.name = name;
+            this.notificationChannel = noticationChannel;
+        }
+
+        public string getName()
+        {
+            return this.name;
+        }
+
+        public void notify(string message)
+        {
+            this.notificationChannel.notify(message, this);
+        }
+    }
+}
