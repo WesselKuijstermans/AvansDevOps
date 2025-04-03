@@ -89,7 +89,7 @@ namespace AvansDevOps.Entities
         public void SetState(ISprintState state)
         {
             this.state = state;
-
+            this.project.SprintUpdate(state, this);
         }
 
         public void SetSummary(string summary)

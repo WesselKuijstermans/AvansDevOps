@@ -17,7 +17,7 @@ namespace AvansDevOps.Entities
         private IItemState state;
         private IItemStateObserver observer;
 
-        public SprintItem(Sprint sprint, BacklogItem backlogItem, IItemStateObserver observer)
+        public SprintItem(Sprint sprint, BacklogItem backlogItem, Project observer)
         {
             this.sprint = sprint;
             this.backlogItem = backlogItem;
@@ -62,7 +62,7 @@ namespace AvansDevOps.Entities
 
         public void NotifyObserver(IItemState newState)
         {
-            observer.Update(newState, this);
+            observer.ItemUpdate(newState, this);
         }
     }
 }
