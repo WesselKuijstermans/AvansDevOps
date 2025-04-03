@@ -76,6 +76,6 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=WesselKuijstermans_AvansDevOps
-            -Dsonar.organization=wesselkuijstermans
+            -Dsonar.organization=wesselkuijstermans-1
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml
