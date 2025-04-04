@@ -96,9 +96,7 @@ jobs:
   
       - name: Begin SonarCloud analysis
         run: |
-          dotnet sonarscanner begin /k:"${{ secrets.SONAR_PROJECT_KEY }}" /o:"${{ secrets.SONAR_ORG }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" \
-          /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml" \
-          /d:sonar.testExecutionReportPaths="TestResults/test-execution-report.xml"
+          dotnet sonarscanner begin /k:"${{ secrets.SONAR_PROJECT_KEY }}" /o:"${{ secrets.SONAR_ORG }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml" /d:sonar.testExecutionReportPaths="TestResults/test-execution-report.xml"
   
       - name: Build
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
