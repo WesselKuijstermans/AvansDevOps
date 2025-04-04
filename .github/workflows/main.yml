@@ -58,7 +58,7 @@ jobs:
           path: .
 
       - name: Run Tests and Collect Coverage
-        run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release" -f xml -o "coverage.xml"
+        run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release --force" -f xml -o "coverage.xml"
 
   sonarcloud:
     runs-on: ubuntu-latest
