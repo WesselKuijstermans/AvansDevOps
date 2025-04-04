@@ -57,6 +57,9 @@ jobs:
           name: coverage-report
           path: ./TestResults/coverage.cobertura.xml
 
+      - name: List TestResults directory (after test)
+        run: dir ./TestResults
+
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: windows-latest
@@ -79,6 +82,9 @@ jobs:
         with:
           name: coverage-report
           path: ./TestResults
+
+      - name: List TestResults directory (after download)
+        run: dir ./TestResults
 
       - name: Begin SonarCloud analysis
         run: |
