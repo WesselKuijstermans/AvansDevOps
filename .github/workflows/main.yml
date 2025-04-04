@@ -65,7 +65,7 @@ jobs:
           path: .
 
       - name: Run Tests and Collect Coverage
-        run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release" -f xml -o "TestResults/coverage.xml"
+        run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release" -f xml -o "coverage.xml"
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -88,7 +88,7 @@ jobs:
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /o:wesselkuijstermans-1 \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.vscoveragexml.reportsPaths=TestResults/coverage.xml
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet build ./AvansDevOps/AvansDevOps.sln --no-incremental
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         env:
