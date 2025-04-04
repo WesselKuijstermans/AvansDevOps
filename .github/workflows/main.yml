@@ -60,17 +60,8 @@ jobs:
           name: build-artifact
           path: .
 
-      - name: Install dotnet-coverage tool
-        run: dotnet tool install --global dotnet-coverage
-
       - name: Run Tests and Collect Coverage
-        run: |
-          dotnet sonarscanner begin /k:"WesselKuijstermans_AvansDevOps"
-              /d:sonar.token="wesselkuijstermans-1"
-              /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
-          dotnet build --no-incremental
-          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
-          dotnet sonarscanner end /d:sonar.token="wesselkuijstermans-1"
+        run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release" -f xml -o "coverage.xml"
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -84,13 +75,15 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
+
       - name: Run SonarCloud Analysis
-        uses: SonarSource/sonarcloud-github-action@v2
+        run: |
+          dotnet sonarscanner begin /k:"WesselKuijstermans_AvansDevOps" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.cs.vscoveragexml.reportsPaths=TestResults/coverage.xml
+          dotnet build --no-incremental
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=WesselKuijstermans_AvansDevOps
-            -Dsonar.organization=wesselkuijstermans-1
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.cs.vscoveragexml.reportsPaths=coverage.xml
