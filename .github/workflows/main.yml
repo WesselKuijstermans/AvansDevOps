@@ -22,8 +22,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
+      - name: Restore NuGet Packages
         run: dotnet restore ./AvansDevOps/AvansDevOps.sln
+
+      - name: Clean previous builds
+        run: dotnet clean ./AvansDevOps/AvansDevOps.sln
 
       - name: Build project
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
@@ -48,17 +51,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install dotnet-coverage tool
-        run: dotnet tool install --global dotnet-coverage
-
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
           path: .
-
-      - name: Clean previous builds
-        run: dotnet clean ./AvansDevOps/AvansDevOps.sln
 
       - name: Run Tests and Collect Coverage
         run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release" -f xml -o "coverage.xml"
