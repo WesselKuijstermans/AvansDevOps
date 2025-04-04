@@ -36,6 +36,58 @@ namespace AvansDevOps.Entities
             return this.name;
         }
 
+        public void SetName(string name)
+        {
+            if (state is ConceptSprintState)
+            {
+                this.name = name;
+            } else
+            {
+                Console.WriteLine("Cannot change the name of a sprint that has already started.");
+            }
+        }
+
+        public DateTime GetStartDate()
+        {
+            return this.startDate;
+        }
+
+        public void SetStartDate(DateTime startDate)
+        {
+            if (state is ConceptSprintState)
+            {
+                this.startDate = startDate;
+            }
+            else
+            {
+                Console.WriteLine("Cannot change the startDate of a sprint that has already started.");
+            }
+        }
+
+        public DateTime GetEndDate()
+        {
+            return this.endDate;
+        }
+
+        public void SetEndDate(DateTime endDate)
+        {
+            if (state is ConceptSprintState)
+            {
+                this.endDate = endDate;
+            }
+            else
+            {
+                Console.WriteLine("Cannot change the endDate of a sprint that has already started.");
+            }
+        }
+
+        public List<SprintItem> GetSprintBacklog()
+        {
+            return this.sprintBacklog;
+        }
+
+
+
         public void AddSprintItem(BacklogItem backlogItem)
         {
             this.sprintBacklog.Add(new SprintItem(this, backlogItem, project));
@@ -95,6 +147,11 @@ namespace AvansDevOps.Entities
         public void SetSummary(string summary)
         {
             this.summary = summary;
+        }
+
+        public string GetSummary()
+        {
+            return this.summary;
         }
     }
 }

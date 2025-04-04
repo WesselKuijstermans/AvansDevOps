@@ -1,4 +1,5 @@
-﻿using AvansDevOps.ItemStatePattern;
+﻿using AvansDevOps.FormMessageObersverPattern;
+using AvansDevOps.ItemStatePattern;
 using AvansDevOps.SprintStateObersverPattern;
 using AvansDevOps.SprintStatePattern;
 using AvansDevOps.StateObserverPattern;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class Project: IItemStateObserver, ISprintStateObserver
+    internal class Project: IItemStateObserver, ISprintStateObserver, IFormMessageObserver
     {
         private string name;
         private List<TeamMember> teamMembers;
@@ -34,7 +35,11 @@ namespace AvansDevOps.Entities
 
         public void RemoveSprint(string name)
         {
-            sprints.Remove(sprints.Find(s => s.GetName() == name));
+            var sprint = sprints.Find(s => s.GetName() == name);
+            if (sprint != null)
+            {
+                sprints.Remove(sprint);
+            }
         }
 
         public List<Sprint> GetSprints()
@@ -85,6 +90,7 @@ namespace AvansDevOps.Entities
                     break;
                 case TodoState:
                     NotifyDevelopers(message);
+                    NotifySrumMaster(message);
                     break;
             }
         }
@@ -104,6 +110,14 @@ namespace AvansDevOps.Entities
             }
         }
 
+        public void FormUpdate(string notification, List<TeamMember> members)
+        {
+            foreach (TeamMember member in members)
+            {
+                member.Notify(notification);
+            }
+        }
+
         private void NotifyTesters(string message)
         {
             
@@ -111,7 +125,7 @@ namespace AvansDevOps.Entities
             {
                 if (teamMember is Tester)
                 {
-                    teamMember.notify("To " + teamMember.getName() + ':' + message);
+                    teamMember.Notify("To " + teamMember.GetName() + ':' + message);
                 }
             }
         }
@@ -122,7 +136,7 @@ namespace AvansDevOps.Entities
             {
                 if (teamMember is Developer || teamMember is LeadDeveloper)
                 {
-                    teamMember.notify("To " + teamMember.getName() + ':' + message);
+                    teamMember.Notify("To " + teamMember.GetName() + ':' + message);
                 }
             }
         }
@@ -133,7 +147,7 @@ namespace AvansDevOps.Entities
             {
                 if (teamMember is ScrumMaster)
                 {
-                    teamMember.notify("To " + teamMember.getName() + ':' + message);
+                    teamMember.Notify("To " + teamMember.GetName() + ':' + message);
                 }
             }
         }

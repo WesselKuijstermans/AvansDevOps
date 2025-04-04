@@ -18,12 +18,12 @@ namespace AvansDevOps.Entities
             this.notificationChannel = noticationChannel;
         }
 
-        public string getName()
+        public string GetName()
         {
             return this.name;
         }
 
-        public void notify(string message)
+        public void Notify(string message)
         {
             this.notificationChannel.notify(message, this);
         }

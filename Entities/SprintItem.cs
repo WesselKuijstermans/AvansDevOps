@@ -1,4 +1,5 @@
-﻿using AvansDevOps.ItemStatePattern;
+﻿using AvansDevOps.FormMessageObersverPattern;
+using AvansDevOps.ItemStatePattern;
 using AvansDevOps.StateObserverPattern;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,9 @@ namespace AvansDevOps.Entities
         private TeamMember? developer;
         private List<SprintItem> subtasks;
         private IItemState state;
-        private IItemStateObserver observer;
+        private IItemStateObserver itemStateObserver;
+        private IFormMessageObserver formObserver;
+        private List<FormMessage> messages;
 
         public SprintItem(Sprint sprint, BacklogItem backlogItem, Project observer)
         {
@@ -23,7 +26,9 @@ namespace AvansDevOps.Entities
             this.backlogItem = backlogItem;
             this.subtasks = new List<SprintItem>();
             this.state = new TodoState(this);
-            this.observer = observer;
+            this.itemStateObserver = observer;
+            this.formObserver = observer;
+            this.messages = new List<FormMessage>();
         }
 
         public void AddSubtask(SprintItem sprintItem)
@@ -62,7 +67,63 @@ namespace AvansDevOps.Entities
 
         public void NotifyObserver(IItemState newState)
         {
-            observer.ItemUpdate(newState, this);
+            itemStateObserver.ItemUpdate(newState, this);
+        }
+
+        public void AssignDeveloper(TeamMember teamMember)
+        {
+            this.state.assignDeveloper(teamMember);
+        }
+
+        public void ReadyForTesting()
+        {
+            this.state.readyForTesting();
+        }
+
+        public void TestSucceeded()
+        {
+            this.state.testSucceeded();
+        }
+
+        public void TestFailed()
+        {
+            this.state.testFailed();
+        }
+
+        public void DefinitionOfDoneCheck()
+        {
+            this.state.definitionOfDoneCheck();
+        }
+
+        public void AddMessage(FormMessage message)
+        {
+            if (state is not DoneState)
+            {
+                this.messages.Add(message);
+                List<TeamMember> membersToNotify = new List<TeamMember>();
+                foreach (FormMessage msg in GetMessages())
+                {
+                    if (msg.GetSender() != message.GetSender())
+                    {
+                        membersToNotify.Add(msg.GetSender());
+                    }
+                }
+                string notificationMessage = message.GetSender().GetName() + " has sent a message to sprint item " + this.GetBacklogItem().GetTask() + ": " + message.GetMessage();
+                formObserver.FormUpdate(notificationMessage, membersToNotify);
+            }
+        }
+
+        public List<FormMessage> GetMessages()
+        {
+            return this.messages;
+        }
+
+        public void RemoveMessage(FormMessage message)
+        {
+            if (state is not DoneState)
+            {  
+                this.messages.Remove(message);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace AvansDevOps.Adapter
     {
         public void notify(string message, TeamMember teamMember)
         {
-            Console.WriteLine("Sending email to " + teamMember.getName() + " with message: " + message);
+            Console.WriteLine("Sending email to " + teamMember.GetName() + " with message: " + message);
         }
     }
 }

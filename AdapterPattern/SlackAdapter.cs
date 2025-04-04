@@ -10,7 +10,7 @@ namespace AvansDevOps.Adapter
     {
         public void notify(string message, Entities.TeamMember teamMember)
         {
-            Console.WriteLine("Sending slack message to " + teamMember.getName() + " with message: " + message);
+            Console.WriteLine("Sending slack message to " + teamMember.GetName() + " with message: " + message);
         }    
     }
 }
