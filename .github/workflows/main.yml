@@ -55,7 +55,7 @@ jobs:
           path: .
 
       - name: Run Tests and Collect Coverage
-        run: dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release --collect "Code Coverage" --verbosity normal
+        run: dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release --collect "Code Coverage" --results-directory ./TestResults --logger "trx;LogFileName=coverage.xml"
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -78,4 +78,4 @@ jobs:
             -Dsonar.projectKey=WesselKuijstermans_AvansDevOps
             -Dsonar.organization=wesselkuijstermans-1
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.cs.vscoveragexml.reportsPaths=TestResults/**/coverage.xml
+            -Dsonar.cs.vscoveragexml.reportsPaths=TestResults/coverage.xml
