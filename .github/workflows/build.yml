@@ -48,8 +48,14 @@ jobs:
       - name: Build
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
 
-      - name: Test with coverage
-        run: dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release --collect:"XPlat Code Coverage"
+      - name: Run tests with coverage
+        run: dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./TestResults/coverage.cobertura.xml
 
   sonarcloud:
     name: SonarCloud Analysis
@@ -65,21 +71,21 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Setup SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          organization: ${{ secrets.SONAR_ORG }}
-          token: ${{ secrets.SONAR_TOKEN }}
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Begin SonarCloud Analysis
+      - name: Download coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: ./TestResults
+
+      - name: Begin SonarCloud analysis
         run: |
-          dotnet sonarscanner begin /k:"${{ secrets.SONAR_PROJECT_KEY }}" /o:"${{ secrets.SONAR_ORG }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml"
+          dotnet sonarscanner begin /k:"${{ secrets.SONAR_PROJECT_KEY }}" /o:"${{ secrets.SONAR_ORG }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml"
 
       - name: Build
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
 
-      - name: Test with Coverage for SonarCloud
-        run: dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/coverage.xml
-
-      - name: End SonarCloud Analysis
+      - name: End SonarCloud analysis
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
