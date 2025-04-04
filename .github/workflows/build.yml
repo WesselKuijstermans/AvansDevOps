@@ -32,38 +32,39 @@ jobs:
     name: Test
     runs-on: windows-latest
     needs: build
-
+  
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+  
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-
+  
       - name: Restore dependencies
         run: dotnet restore ./AvansDevOps/AvansDevOps.sln
-
+  
       - name: Build
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
-
+  
       - name: Run tests with coverage
-        run: dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/
-
+        run: |
+          dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release --collect:"XPlat Code Coverage"
+  
+      - name: Extract coverage report
+        run: |
+          $coverageFile = Get-ChildItem -Recurse -Filter "coverage.cobertura.xml" | Select-Object -First 1
+          Write-Host "Found coverage file at $($coverageFile.FullName)"
+          New-Item -ItemType Directory -Force -Path "TestResults"
+          Copy-Item $coverageFile.FullName -Destination "TestResults/coverage.cobertura.xml"
+  
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ./TestResults/coverage.cobertura.xml
-
-      - name: Debug - List current directory
-        run: |
-          echo "Listing root:"
-          dir
-          echo "Listing recursively:"
-          dir -Recurse
-
+          path: TestResults/coverage.cobertura.xml
+  
   sonarcloud:
     name: SonarCloud Analysis
     runs-on: windows-latest
