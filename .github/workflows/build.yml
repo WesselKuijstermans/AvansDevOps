@@ -57,8 +57,12 @@ jobs:
           name: coverage-report
           path: ./TestResults/coverage.cobertura.xml
 
-      - name: List TestResults directory (after test)
-        run: dir ./TestResults
+      - name: Debug - List current directory
+        run: |
+          echo "Listing root:"
+          dir
+          echo "Listing recursively:"
+          dir -Recurse
 
   sonarcloud:
     name: SonarCloud Analysis
