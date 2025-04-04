@@ -60,9 +60,17 @@ jobs:
       - name: Install dotnet-coverage tool
         run: dotnet tool install --global dotnet-coverage
 
+      - name: Install sonarscanner tool
+        run: dotnet tool install --global sonarscanner
 
       - name: Run Tests and Collect Coverage
-        run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release" -f xml -o "coverage.xml"
+        run: |
+          dotnet sonarscanner begin /k:"WesselKuijstermans_AvansDevOps"
+              /d:sonar.token="wesselkuijstermans-1"
+              /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          dotnet build --no-incremental
+          dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
+          dotnet sonarscanner end /d:sonar.token="wesselkuijstermans-1"
 
   sonarcloud:
     runs-on: ubuntu-latest
