@@ -50,7 +50,7 @@ jobs:
   
       - name: Run tests and collect coverage
         run: |
-          dotnet test ./AvansDevOps/AvansDevOpsTest/AvansDevOpsTest.csproj --configuration Release --no-build --logger "trx;LogFileName=test-execution-report.xml" --collect:"XPlat Code Coverage"
+          dotnet test ./AvansDevOps/AvansDevOps.sln --configuration Release --no-build --logger "trx;LogFileName=test-execution-report.xml" --collect:"XPlat Code Coverage"
         
       - name: Extract coverage report
         run: |
