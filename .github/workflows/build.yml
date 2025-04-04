@@ -48,10 +48,10 @@ jobs:
       - name: Build
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
   
-      - name: Run tests with coverage
+      - name: Run tests and collect coverage
         run: |
-          dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release --collect:"XPlat Code Coverage"
-  
+          dotnet test ./AvansDevOps/AvansDevOpsTest/AvansDevOpsTest.csproj --configuration Release --no-build --logger "trx;LogFileName=test-execution-report.xml" --collect:"XPlat Code Coverage"
+        
       - name: Extract coverage report
         run: |
           $coverageFile = Get-ChildItem -Recurse -Filter "coverage.cobertura.xml" | Select-Object -First 1
@@ -64,6 +64,12 @@ jobs:
         with:
           name: coverage-report
           path: TestResults/coverage.cobertura.xml
+
+      - name: Upload test execution report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-execution-report
+          path: ./test-execution-report.xml
   
   sonarcloud:
     name: SonarCloud Analysis
@@ -91,15 +97,21 @@ jobs:
           name: coverage-report
           path: ./TestResults
   
+      - name: Download test execution report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: test-execution-report
+          path: ./TestResults
+  
       - name: List TestResults directory (after download)
         run: dir ./TestResults
   
       - name: Begin SonarCloud analysis
-        run: |
-          dotnet sonarscanner begin /k:"${{ secrets.SONAR_PROJECT_KEY }}" /o:"${{ secrets.SONAR_ORG }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml" /d:sonar.testExecutionReportPaths="TestResults/test-execution-report.xml"
+        run: dotnet sonarscanner begin /k:"${{ secrets.SONAR_PROJECT_KEY }}" /o:"${{ secrets.SONAR_ORG }}" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/coverage.cobertura.xml" /d:sonar.testExecutionReportPaths="TestResults/test-execution-report.xml"
   
       - name: Build
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
   
       - name: End SonarCloud analysis
         run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
