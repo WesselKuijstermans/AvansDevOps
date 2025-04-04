@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.SprintStatePattern
 {
-    internal interface ISprintState
+    public interface ISprintState
     {
         void StartSprint();
         void StopSprint();

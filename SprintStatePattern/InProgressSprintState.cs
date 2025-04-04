@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.SprintStatePattern
 {
-    internal class InProgressSprintState(Sprint sprint) : ISprintState
+    public class InProgressSprintState(Sprint sprint) : ISprintState
     {
         private Sprint _sprint = sprint;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.TemplatePattern
 {
-    internal class AnalyseStep: IPipelineStep
+    public class AnalyseStep: IPipelineStep
     {
         public void Execute()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class BacklogItem
+    public class BacklogItem
     {
         private string task;
         private int storyPoints;

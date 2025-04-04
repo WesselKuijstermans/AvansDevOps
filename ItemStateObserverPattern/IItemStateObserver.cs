@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.StateObserverPattern
 {
-    internal interface IItemStateObserver
+    public interface IItemStateObserver
     {
         void ItemUpdate(IItemState newState, SprintItem item);
     }

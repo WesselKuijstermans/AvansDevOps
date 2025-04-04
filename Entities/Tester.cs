@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class Tester: TeamMember
+    public class Tester: TeamMember
     {
         public Tester(string name, INotificationAdapter notificationAdapter) : base(name, notificationAdapter)
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class FormMessage
+    public class FormMessage
     {
         private TeamMember sender;
         private string message;

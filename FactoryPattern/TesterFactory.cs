@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.FactoryPattern
 {
-    internal class TesterFactory: ITeamMemberFactory
+    public class TesterFactory: ITeamMemberFactory
     {
         public TeamMember CreateTeamMember(string name, INotificationAdapter notificationAdapter)
         {

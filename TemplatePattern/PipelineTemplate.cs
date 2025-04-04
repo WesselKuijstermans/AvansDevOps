@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.TemplatePattern
 {
-    internal abstract class PipelineTemplate
+    public abstract class PipelineTemplate
     {
         private List<IPipelineStep> steps;
         private static readonly Random random = new Random();

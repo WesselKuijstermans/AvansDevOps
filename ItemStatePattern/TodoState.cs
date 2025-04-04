@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.ItemStatePattern
 {
-    internal class TodoState(SprintItem sprintItem) : IItemState
+    public class TodoState(SprintItem sprintItem) : IItemState
     {
         private SprintItem _sprintItem = sprintItem;
 

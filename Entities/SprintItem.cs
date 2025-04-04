@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class SprintItem
+    public class SprintItem
     {
         private Sprint sprint;
         private BacklogItem backlogItem;

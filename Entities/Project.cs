@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class Project: IItemStateObserver, ISprintStateObserver, IFormMessageObserver
+    public class Project: IItemStateObserver, ISprintStateObserver, IFormMessageObserver
     {
         private string name;
         private List<TeamMember> teamMembers;
@@ -25,6 +25,11 @@ namespace AvansDevOps.Entities
             this.teamMembers = new List<TeamMember>();
             this.sprints = new List<Sprint>();
             this.backlog = new List<BacklogItem>();
+        }
+
+        public string GetName()
+        {
+            return this.name;
         }
 
         public void AddSprint(string name, DateTime startDate, DateTime endDate, PipelineTemplate pipeline)

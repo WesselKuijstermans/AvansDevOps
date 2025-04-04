@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class Sprint
+    public class Sprint
     {
         private string name;
         private DateTime startDate;

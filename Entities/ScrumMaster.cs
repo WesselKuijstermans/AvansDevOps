@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class ScrumMaster: TeamMember
+    public class ScrumMaster: TeamMember
     {
         public ScrumMaster(string name, INotificationAdapter notificationAdapter) : base(name, notificationAdapter)
         {

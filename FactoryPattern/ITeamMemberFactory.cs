@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.FactoryPattern
 {
-    internal interface ITeamMemberFactory
+    public interface ITeamMemberFactory
     {
         TeamMember CreateTeamMember(string name, INotificationAdapter notificationAdapter);
     }

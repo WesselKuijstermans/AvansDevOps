@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.ItemStatePattern
 {
-    internal interface IItemState
+    public interface IItemState
     {
         void assignDeveloper(TeamMember teamMember);
         void readyForTesting();

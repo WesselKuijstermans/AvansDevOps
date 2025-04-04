@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.SprintStateObersverPattern
 {
-    internal interface ISprintStateObserver
+    public interface ISprintStateObserver
     {
         void SprintUpdate(ISprintState newState, Sprint sprint);
     }

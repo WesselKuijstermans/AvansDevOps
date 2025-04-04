@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Adapter
 {
-    internal interface INotificationAdapter
+    public interface INotificationAdapter
     {
         void notify(string message, TeamMember teamMember);
     }

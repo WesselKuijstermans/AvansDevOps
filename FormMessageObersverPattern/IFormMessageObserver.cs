@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.FormMessageObersverPattern
 {
-    internal interface IFormMessageObserver
+    public interface IFormMessageObserver
     {
         void FormUpdate(string formMessage, List<TeamMember> membersToNotify);
     }

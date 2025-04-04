@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    internal class Developer : TeamMember
+    public class Developer : TeamMember
     {
 
         public Developer(string name, INotificationAdapter noticationChannel) : base(name, noticationChannel)

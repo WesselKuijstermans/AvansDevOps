@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Adapter
 {
-    internal class EmailAdapter : INotificationAdapter
+    public class EmailAdapter : INotificationAdapter
     {
         public void notify(string message, TeamMember teamMember)
         {

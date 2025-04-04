@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Adapter
 {
-    internal class SlackAdapter: INotificationAdapter
+    public class SlackAdapter: INotificationAdapter
     {
         public void notify(string message, Entities.TeamMember teamMember)
         {

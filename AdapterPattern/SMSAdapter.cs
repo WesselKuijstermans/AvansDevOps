@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Adapter
 {
-    internal class SMSAdapter: INotificationAdapter
+    public class SMSAdapter: INotificationAdapter
     {
         public void notify(string message, Entities.TeamMember teamMember)
         {

@@ -7,24 +7,15 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.ItemStatePattern
 {
-    internal class DoingState(SprintItem sprintItem) : IItemState
+    public class DoingState(SprintItem sprintItem) : IItemState
     {
         private SprintItem _sprintItem = sprintItem;
 
         public void assignDeveloper(TeamMember teamMember)
         {
-            Console.WriteLine("A developer is already assigned. Assign new developer? (y/N)");
-            string input = Console.ReadLine();
-            if (input == "y" || input.Equals("yes", StringComparison.CurrentCultureIgnoreCase))
-            {
-                _sprintItem.SetDeveloper(teamMember);
-                Console.WriteLine("Developer assigned");
-            }
-            else
-            {
-                   Console.WriteLine("Developer not assigned");
-            }
-        }
+            Console.WriteLine("A developer is already assigned. Assigning new developer");
+            this._sprintItem.SetDeveloper(teamMember);
+		}
 
         public void readyForTesting()
         {
