@@ -38,15 +38,10 @@ namespace AvansDevOps.ItemStatePattern
             {
                 for (int i = 0; i < subTasks.Count; i++)
                 {
-                    if (subTasks[i].GetState() is DoneState)
+                    if (subTasks[i].GetState().GetType() != typeof(DoneState))
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Item does not meet definition of done.");
-                        Console.WriteLine("Subtask " + subTasks[i].GetBacklogItem().GetTask() + " is not tested yet.");
-                        Console.WriteLine("Item set back to ready for testing.");
+                        Console.WriteLine("Item does not meet the definition of done.");
+                        Console.WriteLine("Subtask " + subTasks[i].GetBacklogItem().GetTask() + " is not done.");
                         _sprintItem.SetState(new ReadyForTestingState(_sprintItem));
                         return;
                     }
