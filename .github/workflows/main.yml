@@ -25,6 +25,9 @@ jobs:
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
+      - name: Install dotnet-coverage tool
+        run: dotnet tool install --global dotnet-coverage
+
       - name: Restore NuGet Packages
         run: dotnet restore ./AvansDevOps/AvansDevOps.sln
 
