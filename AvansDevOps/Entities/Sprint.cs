@@ -1,4 +1,7 @@
-﻿using AvansDevOps.SprintStatePattern;
+﻿using AvansDevOps.FormMessageObersverPattern;
+using AvansDevOps.SprintStateObersverPattern;
+using AvansDevOps.SprintStatePattern;
+using AvansDevOps.StateObserverPattern;
 using AvansDevOps.TemplatePattern;
 using System;
 using System.Collections.Generic;
@@ -16,10 +19,10 @@ namespace AvansDevOps.Entities
         private List<SprintItem> sprintBacklog;
         private PipelineTemplate pipeline;
         private ISprintState state;
-        private Project project;
+        private ISprintStateObserver observer;
         private string summary;
 
-        public Sprint(string name, DateTime startDate, DateTime endDate, PipelineTemplate pipeline, Project project)
+        public Sprint(string name, DateTime startDate, DateTime endDate, PipelineTemplate pipeline, ISprintStateObserver observer)
         {
             this.name = name;
             this.startDate = startDate;
@@ -27,7 +30,7 @@ namespace AvansDevOps.Entities
             this.sprintBacklog = new List<SprintItem>();
             this.pipeline = pipeline;
             this.state = new ConceptSprintState(this);
-            this.project = project;
+            this.observer = observer;
             this.summary = "";
         }
 
@@ -88,9 +91,9 @@ namespace AvansDevOps.Entities
 
 
 
-        public void AddSprintItem(BacklogItem backlogItem)
+        public void AddSprintItem(BacklogItem backlogItem, IItemStateObserver itemObserver, IFormMessageObserver formObserver)
         {
-            this.sprintBacklog.Add(new SprintItem(this, backlogItem, project));
+            this.sprintBacklog.Add(new SprintItem(this, backlogItem, itemObserver, formObserver));
         }
 
         public void RemoveSprintItem(SprintItem sprintItem)
@@ -130,6 +133,11 @@ namespace AvansDevOps.Entities
 
         public List<IPipelineStep> GetPipelineSteps()
         {
+            if (this.pipeline == null)
+            {
+                Console.WriteLine("Pipeline is not set.");
+                return null;
+            }
             return this.pipeline.GetSteps();
         }
 
@@ -141,7 +149,12 @@ namespace AvansDevOps.Entities
         public void SetState(ISprintState state)
         {
             this.state = state;
-            this.project.SprintUpdate(state, this);
+            this.observer.SprintUpdate(state, this);
+        }
+
+        public ISprintState GetState()
+        {
+            return this.state;
         }
 
         public void SetSummary(string summary)

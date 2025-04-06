@@ -20,14 +20,14 @@ namespace AvansDevOps.Entities
         private IFormMessageObserver formObserver;
         private List<FormMessage> messages;
 
-        public SprintItem(Sprint sprint, BacklogItem backlogItem, Project observer)
+        public SprintItem(Sprint sprint, BacklogItem backlogItem, IItemStateObserver itemObserver, IFormMessageObserver formObserver)
         {
             this.sprint = sprint;
             this.backlogItem = backlogItem;
             this.subtasks = new List<SprintItem>();
             this.state = new TodoState(this);
-            this.itemStateObserver = observer;
-            this.formObserver = observer;
+            this.itemStateObserver = itemObserver;
+            this.formObserver = formObserver;
             this.messages = new List<FormMessage>();
         }
 

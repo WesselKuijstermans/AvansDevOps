@@ -32,9 +32,9 @@ namespace AvansDevOps.Entities
             return this.name;
         }
 
-        public void AddSprint(string name, DateTime startDate, DateTime endDate, PipelineTemplate pipeline)
+        public void AddSprint(string name, DateTime startDate, DateTime endDate, PipelineTemplate pipeline, ISprintStateObserver observer)
         {
-            Sprint sprint = new Sprint(name, startDate, endDate, pipeline, this);
+            Sprint sprint = new Sprint(name, startDate, endDate, pipeline, observer);
             sprints.Add(sprint);
         }
 

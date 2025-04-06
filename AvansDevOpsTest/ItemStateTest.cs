@@ -16,9 +16,9 @@ namespace AvansDevOpsTest
         public ItemStateTest() 
         {
             this.project = new Project("Test Project");
-            project.AddSprint(project.GetName() + "-1", DateTime.Now, DateTime.Now.AddDays(14), new TestPipeline());
+            project.AddSprint(project.GetName() + "-1", DateTime.Now, DateTime.Now.AddDays(14), new TestPipeline(), project);
             this.sprint = project.GetSprints()[0];
-            this.item = new SprintItem(sprint, new BacklogItem("Test Task", 2), project);
+            this.item = new SprintItem(sprint, new BacklogItem("Test Task", 2), project, project);
             this.developer = new Developer("Test Developer", new EmailAdapter());
             this.project.AddTeamMember(developer);
         }
@@ -106,7 +106,7 @@ namespace AvansDevOpsTest
         public void Tested_Should_Transition_To_Done_If_DefinitionOfDone_SubtasksDone()
         {
             this.item.SetState(new TestedState(item));
-            this.item.AddSubtask(new SprintItem(sprint, new BacklogItem("Subtask", 1), project));
+            this.item.AddSubtask(new SprintItem(sprint, new BacklogItem("Subtask", 1), project, project));
             this.item.GetSubtasks()[0].SetState(new DoneState(item));
             this.item.DefinitionOfDoneCheck();
 
@@ -118,7 +118,7 @@ namespace AvansDevOpsTest
         public void Tested_Should_Transition_To_ReadyForTesting_If_DefinitionOfDone_SubtasksNotDone()
         {
             this.item.SetState(new TestedState(item));
-            this.item.AddSubtask(new SprintItem(sprint, new BacklogItem("Subtask", 1), project));
+            this.item.AddSubtask(new SprintItem(sprint, new BacklogItem("Subtask", 1), project, project));
             this.item.GetSubtasks()[0].SetState(new DoingState(item));
             this.item.DefinitionOfDoneCheck();
 

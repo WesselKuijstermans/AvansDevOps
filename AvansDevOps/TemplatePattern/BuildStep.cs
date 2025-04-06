@@ -10,7 +10,7 @@ namespace AvansDevOps.TemplatePattern
     {
         public void Execute()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Building the project...");
 
         }
     }
