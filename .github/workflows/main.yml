@@ -58,14 +58,14 @@ jobs:
           path: .
 
       - name: Create blank coverage file
-        run: touch AvansDevOpsTest/TestResults/coverage.cobertura.xml
+        run: touch AvansDevOpsTest/coverage.cobertura.xml
   
       - name: Run Coverlet Coverage
         id: coverlet
         uses: b3b00/coverlet-action@1.2.5
         with:
           testProject: 'AvansDevOpsTest/AvansDevOpsTest.csproj'
-          output: 'TestResults/coverage.cobertura.xml'
+          output: 'coverage.cobertura.xml'
           outputFormat: 'cobertura'
           debug: true
   
