@@ -56,6 +56,10 @@ jobs:
         with:
           name: build-artifact
           path: .
+
+      - name: Create dummy coverage file
+        run: |
+          touch AvansDevOpsTest/coverage.cobertura.xml
   
       - name: Run Coverlet Coverage
         id: coverlet
