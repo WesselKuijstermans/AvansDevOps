@@ -68,15 +68,15 @@ jobs:
       - name: Show coverage file details
         run: |
           echo "File size:"
-          stat TestResults/coverage.cobertura.xml || echo "File not found"
+          stat ./AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "File not found"
           echo "File contents:"
-          cat TestResults/coverage.cobertura.xml || echo "No contents"
+          cat ./AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "No contents"
   
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: TestResults/coverage.cobertura.xml
+          path: ./AvansDevOpsTest/TestResults/coverage.cobertura.xml
 
   sonarcloud:
     runs-on: ubuntu-latest
