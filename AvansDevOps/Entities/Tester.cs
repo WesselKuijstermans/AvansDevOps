@@ -1,4 +1,4 @@
-﻿using AvansDevOps.Adapter;
+﻿using AvansDevOps.AdapterPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    public class Tester: TeamMember
+    public class Tester(string name, INotificationAdapter notificationAdapter) : TeamMember(name, notificationAdapter)
     {
-        public Tester(string name, INotificationAdapter notificationAdapter) : base(name, notificationAdapter)
-        {
-        }
     }
 }

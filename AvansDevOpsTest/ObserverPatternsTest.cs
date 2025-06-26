@@ -1,35 +1,30 @@
-﻿using AvansDevOps.Adapter;
+﻿using AvansDevOps.AdapterPattern;
 using AvansDevOps.Entities;
+using AvansDevOps.FacadePattern;
 using AvansDevOps.FormMessageObersverPattern;
+using AvansDevOps.ItemStateObserverPattern;
 using AvansDevOps.ItemStatePattern;
+using AvansDevOps.PipelineStrategyPattern;
 using AvansDevOps.SprintStateObersverPattern;
 using AvansDevOps.SprintStatePattern;
-using AvansDevOps.StateObserverPattern;
-using AvansDevOps.TemplatePattern;
+using AvansDevOps.VersionControlStrategyPattern;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AvansDevOpsTest
-{
-    public class ObserverPatternsTest
-    {
-        private Project project;
-        private Sprint sprint;
-        private SprintItem item;
-        private TeamMember developer;
-        private TeamMember tester;
-        private TeamMember leadDeveloper;
-        private TeamMember scrumMaster;
-        private Mock<IItemStateObserver> mockItemObserver;
-        private Mock<ISprintStateObserver> mockSprintObserver;
-        private Mock<IFormMessageObserver> mockFormObserver;
 
-        public ObserverPatternsTest()
-        {
+namespace AvansDevOpsTest {
+    public class ObserverPatternsTest {
+        private readonly Project project;
+        private readonly Sprint sprint;
+        private readonly SprintItem item;
+        private readonly TeamMember developer;
+        private readonly TeamMember tester;
+        private readonly TeamMember leadDeveloper;
+        private readonly TeamMember scrumMaster;
+        private readonly Mock<IItemStateObserver> mockItemObserver;
+        private readonly Mock<ISprintStateObserver> mockSprintObserver;
+        private readonly Mock<IFormMessageObserver> mockFormObserver;
+
+        public ObserverPatternsTest() {
             this.mockItemObserver = new Mock<IItemStateObserver>();
             this.mockSprintObserver = new Mock<ISprintStateObserver>();
             this.mockFormObserver = new Mock<IFormMessageObserver>();
@@ -38,11 +33,13 @@ namespace AvansDevOpsTest
             pipeline.AddStep(new BuildStep());
             project.AddSprint(project.GetName() + "-1", DateTime.Now, DateTime.Now.AddDays(14), pipeline, mockSprintObserver.Object);
             this.sprint = project.GetSprints()[0];
-            this.item = new SprintItem(sprint, new BacklogItem("Test Task", 2), mockItemObserver.Object, mockFormObserver.Object);
-            this.developer = new Developer("Test Developer", new EmailAdapter());
-            this.tester = new Tester("Test Tester", new EmailAdapter());
-            this.leadDeveloper = new LeadDeveloper("Test Lead Developer", new SlackAdapter());
-            this.scrumMaster = new ScrumMaster("Test Scrum Master", new SlackAdapter());
+            this.item = new SprintItem(new BacklogItem("Test Task", 2), mockItemObserver.Object, mockFormObserver.Object, null);
+            this.item.versionControlFacade = new VersionControlFacade(new GitVersionControlStrategy(), item);
+            this.item.versionControlFacade.Pull("Main");
+            this.developer = new Developer("Test Developer", new EmailAdapter("test@gmail.com"));
+            this.tester = new Tester("Test Tester", new EmailAdapter("test@gmail.com"));
+            this.leadDeveloper = new LeadDeveloper("Test Lead Developer", new SlackAdapter("test-slack-token"));
+            this.scrumMaster = new ScrumMaster("Test Scrum Master", new SlackAdapter("test-slack-token"));
             project.AddTeamMember(developer);
             project.AddTeamMember(tester);
             project.AddTeamMember(leadDeveloper);
@@ -50,8 +47,7 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void ItemStateObserver_Should_Notify_TeamMember_When_State_Stages()
-        {
+        public void ItemStateObserver_Should_Notify_TeamMember_When_State_Stages() {
             item.AssignDeveloper(developer);
             item.ReadyForTesting();
             item.TestFailed();
@@ -69,8 +65,7 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void SprintStateObserver_Should_Notify_TeamMember_When_State_Stages()
-        {
+        public void SprintStateObserver_Should_Notify_TeamMember_When_State_Stages() {
             sprint.StartSprint();
             sprint.StopSprint();
             sprint.StartRelease();
@@ -81,13 +76,12 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void FormMessageObserver_Should_Notify_TeamMember_When_State_Stages()
-        {
+        public void FormMessageObserver_Should_Notify_TeamMember_When_State_Stages() {
             item.AddMessage(new FormMessage(developer, "Test"));
 
             // recipients is empty because no one has sent a message before this
-            List<TeamMember> recipients = new List<TeamMember>();
-            
+            List<TeamMember> recipients = [];
+
             mockFormObserver.Verify(o => o.FormUpdate(It.IsAny<string>(), recipients), Times.Once);
 
             // now the developer will be notified of future messages from other teamMembers on this item
@@ -97,6 +91,27 @@ namespace AvansDevOpsTest
 
             mockFormObserver.Verify(o => o.FormUpdate(It.IsAny<string>(), recipients), Times.Once);
 
+            // now the tester is added too
+            recipients.Add(tester);
+
+            item.AddMessage(new FormMessage(scrumMaster, "Test"));
+
+            mockFormObserver.Verify(o => o.FormUpdate(It.IsAny<string>(), recipients), Times.Once);
+        }
+
+        [Fact]
+        public void FormMessageObserver_Should_Not_Notify_Message_Sender() {
+            item.AddMessage(new FormMessage(developer, "Test"));
+
+            // recipients is empty because no one has sent a message before this
+            List<TeamMember> recipients = [];
+
+            mockFormObserver.Verify(o => o.FormUpdate(It.IsAny<string>(), recipients), Times.Once);
+
+            // developer should not receive notification for their own message
+            item.AddMessage(new FormMessage(developer, "Test"));
+
+            mockFormObserver.Verify(o => o.FormUpdate(It.IsAny<string>(), recipients), Times.Exactly(2));
         }
     }
 }

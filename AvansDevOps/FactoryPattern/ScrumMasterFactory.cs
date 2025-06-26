@@ -1,4 +1,4 @@
-﻿using AvansDevOps.Adapter;
+﻿using AvansDevOps.AdapterPattern;
 using AvansDevOps.Entities;
 using System;
 using System.Collections.Generic;

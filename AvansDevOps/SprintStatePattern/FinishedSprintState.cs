@@ -1,34 +1,25 @@
 ﻿using AvansDevOps.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Spectre.Console;
 
-namespace AvansDevOps.SprintStatePattern
-{
-    public class FinishedSprintState(Sprint sprint) : ISprintState
-    {
-        private Sprint _sprint = sprint;
+namespace AvansDevOps.SprintStatePattern {
+    public class FinishedSprintState(Sprint sprint) : ISprintState {
+        private readonly Sprint _sprint = sprint;
 
-        public void StartRelease()
-        {
-            Console.WriteLine("Sprint has been finalized. No more changes can be made.");
+        public bool StartRelease() {
+            AnsiConsole.WriteLine("Sprint has been finalized. No more changes can be made.");
+            return false;
         }
 
-        public void StartSprint()
-        {
-            Console.WriteLine("Sprint has been finalized. No more changes can be made.");
+        public void StartSprint() {
+            AnsiConsole.WriteLine("Sprint has been finalized. No more changes can be made.");
         }
 
-        public void StopSprint()
-        {
-            Console.WriteLine("Sprint has been finalized. No more changes can be made.");
+        public void StopSprint() {
+            AnsiConsole.WriteLine("Sprint has been finalized. No more changes can be made.");
         }
 
-        public void UploadSummary(string summary)
-        {
-            Console.WriteLine("Sprint has been finalized. No more changes can be made.");
+        public void UploadSummary(string summary) {
+            AnsiConsole.WriteLine("Sprint has been finalized. No more changes can be made.");
         }
     }
 }

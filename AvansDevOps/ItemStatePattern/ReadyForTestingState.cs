@@ -4,39 +4,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace AvansDevOps.ItemStatePattern
 {
     public class ReadyForTestingState(SprintItem sprintItem) : IItemState
     {
-        private SprintItem _sprintItem = sprintItem;
+        private readonly SprintItem _sprintItem = sprintItem;
 
-        public void assignDeveloper(TeamMember teamMember)
+        public void AssignDeveloper(TeamMember teamMember)
         {
-            Console.WriteLine("Item is already ready for testing. No developer can be assigned.");
+            AnsiConsole.WriteLine("Item is already ready for testing. No developer can be assigned.");
         }
 
-        public void readyForTesting()
+        public void ReadyForTesting()
         {
-            Console.WriteLine("Item is already ready for testing.");
+            AnsiConsole.WriteLine("Item is already ready for testing.");
         }
 
-        public void testSucceeded()
+        public void TestSucceeded()
         {
-            Console.WriteLine("Item test succeeded.");
+            AnsiConsole.WriteLine("Item test succeeded.");
             _sprintItem.SetState(new TestedState(_sprintItem));
         }
 
-        public void testFailed()
+        public void TestFailed()
         {
-            Console.WriteLine("Item test failed.");
-            Console.WriteLine("Item set back to ToDo.");
+            AnsiConsole.WriteLine("Item test failed.");
+            AnsiConsole.WriteLine("Item set back to ToDo.");
             _sprintItem.SetState(new TodoState(_sprintItem));
         }
 
-        public void definitionOfDoneCheck()
+        public void DefinitionOfDoneCheck()
         {
-            Console.WriteLine("Can't review definition of done yet. Item needs to be tested first.");
+            AnsiConsole.WriteLine("Can't review definition of done yet. Item needs to be tested first.");
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using AvansDevOps.Adapter;
+﻿using AvansDevOps.AdapterPattern;
 using AvansDevOps.Entities;
 using AvansDevOps.SprintStatePattern;
-using AvansDevOps.TemplatePattern;
+using AvansDevOps.PipelineStrategyPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,23 +12,25 @@ namespace AvansDevOpsTest
 {
     public class SprintStateTest
     {
-        private Project project;
-        private Sprint sprintWithPipeline;
-        private Sprint sprint;
-        private TeamMember developer;
+        private readonly Project project;
+        private readonly NotificationService notificationService;
+        private readonly Sprint sprintWithPipeline;
+        private readonly Sprint sprint;
+        private readonly TeamMember developer;
 
         public SprintStateTest()
         {
             this.project = new Project("TestProject");
+            this.notificationService = new(project);
             var startDate = DateTime.Now;
             var endDate = startDate.AddDays(10);
-            this.project.AddSprint("TestSprint", startDate, endDate, null, project);
+            this.project.AddSprint("TestSprint", startDate, endDate, null, notificationService);
             this.sprint = project.GetSprints()[0];
             var pipeline = new TestPipeline();
             pipeline.AddStep(new BuildStep());
-            this.project.AddSprint("TestSprintWithPipeline", startDate, endDate, pipeline, project);
+            this.project.AddSprint("TestSprintWithPipeline", startDate, endDate, pipeline, notificationService);
             this.sprintWithPipeline = project.GetSprints()[1];
-            this.developer = new Developer("TestUser", new SlackAdapter());
+            this.developer = new Developer("TestUser", new SlackAdapter("test-slack-token"));
             this.project.AddTeamMember(developer);
         }
 

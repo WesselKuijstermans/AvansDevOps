@@ -4,38 +4,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace AvansDevOps.ItemStatePattern
 {
     public class TodoState(SprintItem sprintItem) : IItemState
     {
-        private SprintItem _sprintItem = sprintItem;
+        private readonly SprintItem _sprintItem = sprintItem;
 
-        public void assignDeveloper(TeamMember teamMember)
+        public void AssignDeveloper(TeamMember teamMember)
         {
-            Console.WriteLine("Assigning developer to item");
+            AnsiConsole.WriteLine("Assigning developer to item");
             _sprintItem.SetDeveloper(teamMember);
             _sprintItem.SetState(new DoingState(_sprintItem));
         }
 
-        public void readyForTesting()
+        public void ReadyForTesting()
         {
-            Console.WriteLine("Can't move to ready for testing. Assign a developer first");
+            AnsiConsole.WriteLine("Can't move to ready for testing. Assign a developer first");
         }
 
-        public void testSucceeded()
+        public void TestSucceeded()
         {
-            Console.WriteLine("Can't perform tests yet. Assign a developer first");
+            AnsiConsole.WriteLine("Can't perform tests yet. Assign a developer first");
         }
 
-        public void testFailed()
+        public void TestFailed()
         {
-            Console.WriteLine("Can't perform tests yet. Assign a developer first");
+            AnsiConsole.WriteLine("Can't perform tests yet. Assign a developer first");
         }
 
-        public void definitionOfDoneCheck()
+        public void DefinitionOfDoneCheck()
         {
-            Console.WriteLine("Can't review definition of done yet. Assign a developer first");
+            AnsiConsole.WriteLine("Can't review definition of done yet. Assign a developer first");
         }
     }
 }

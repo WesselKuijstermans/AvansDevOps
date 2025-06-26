@@ -9,10 +9,10 @@ namespace AvansDevOps.ItemStatePattern
 {
     public interface IItemState
     {
-        void assignDeveloper(TeamMember teamMember);
-        void readyForTesting();
-        void testSucceeded();
-        void testFailed();
-        void definitionOfDoneCheck();
+        void AssignDeveloper(TeamMember teamMember);
+        void ReadyForTesting();
+        void TestSucceeded();
+        void TestFailed();
+        void DefinitionOfDoneCheck();
     }
 }

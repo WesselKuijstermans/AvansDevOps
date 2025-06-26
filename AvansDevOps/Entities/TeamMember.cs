@@ -1,4 +1,4 @@
-﻿using AvansDevOps.Adapter;
+﻿using AvansDevOps.AdapterPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,25 +7,30 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    public abstract class TeamMember
+    public abstract class TeamMember(string name, INotificationAdapter noticationChannel)
     {
-        private string name;
-        private INotificationAdapter notificationChannel;
-
-        public TeamMember(string name, INotificationAdapter noticationChannel)
-        {
-            this.name = name;
-            this.notificationChannel = noticationChannel;
-        }
+        private readonly string name = name;
+        private readonly INotificationAdapter notificationChannel = noticationChannel;
 
         public string GetName()
         {
             return this.name;
         }
 
-        public void Notify(string message)
+        public string getContactInfo()
         {
-            this.notificationChannel.notify(message, this);
+            // return string field from notificationadapter
+            return notificationChannel.ToString();
+        }
+
+        public void Notify(string subject, string message)
+        {
+            this.notificationChannel.Notify(this, subject, message);
+        }
+
+        public override string ToString()
+        {
+            return $"{this.name}, {this.notificationChannel.ToString()}";
         }
     }
 }

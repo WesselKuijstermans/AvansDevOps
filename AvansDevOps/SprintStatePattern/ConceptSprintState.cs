@@ -1,35 +1,26 @@
 ﻿using AvansDevOps.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Spectre.Console;
 
-namespace AvansDevOps.SprintStatePattern
-{
-    public class ConceptSprintState(Sprint sprint) : ISprintState
-    {
-        private Sprint _sprint = sprint;
+namespace AvansDevOps.SprintStatePattern {
+    public class ConceptSprintState(Sprint sprint) : ISprintState {
+        private readonly Sprint _sprint = sprint;
 
-        public void StartRelease()
-        {
-            Console.WriteLine("Sprint not started yet. Wait until the sprint is done to start release");
+        public bool StartRelease() {
+            AnsiConsole.WriteLine("Sprint not started yet. Wait until the sprint is done to start release");
+            return false;
         }
 
-        public void StartSprint()
-        {
-            Console.WriteLine("Starting sprint");
+        public void StartSprint() {
+            AnsiConsole.WriteLine("Starting sprint");
             _sprint.SetState(new InProgressSprintState(_sprint));
         }
 
-        public void StopSprint()
-        {
-            Console.WriteLine("Cannot stop sprint, because it has not started yet");
+        public void StopSprint() {
+            AnsiConsole.WriteLine("Cannot stop sprint, because it has not started yet");
         }
 
-        public void UploadSummary(string summary)
-        {
-            Console.WriteLine("Sprint not started yet. Wait until the sprint is done to upload a summary");
+        public void UploadSummary(string summary) {
+            AnsiConsole.WriteLine("Sprint not started yet. Wait until the sprint is done to upload a summary");
         }
     }
 }

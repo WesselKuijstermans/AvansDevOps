@@ -4,36 +4,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Spectre.Console;
 
 namespace AvansDevOps.ItemStatePattern
 {
     public class DoneState(SprintItem sprintItem) : IItemState
     {
-        private SprintItem _sprintItem = sprintItem;
+        private readonly SprintItem _sprintItem = sprintItem;
 
-        public void assignDeveloper(TeamMember teamMember)
+        public void AssignDeveloper(TeamMember teamMember)
         {
-            Console.WriteLine("Item is already done. No more changes can be made.");
+            AnsiConsole.WriteLine("Item is already done. No more changes can be made.");
         }
 
-        public void readyForTesting()
+        public void ReadyForTesting()
         {
-            Console.WriteLine("Item is already done. No more changes can be made.");
+            AnsiConsole.WriteLine("Item is already done. No more changes can be made.");
         }
 
-        public void testSucceeded()
+        public void TestSucceeded()
         {
-            Console.WriteLine("Item is already done. No more changes can be made.");
+            AnsiConsole.WriteLine("Item is already done. No more changes can be made.");
         }
 
-        public void testFailed()
+        public void TestFailed()
         {
-            Console.WriteLine("Item is already done. No more changes can be made.");
+            AnsiConsole.WriteLine("Item is already done. No more changes can be made.");
         }
 
-        public void definitionOfDoneCheck()
+        public void DefinitionOfDoneCheck()
         {
-            Console.WriteLine("Item is already done. No more changes can be made.");
+            AnsiConsole.WriteLine("Item is already done. No more changes can be made.");
         }
     }
 }

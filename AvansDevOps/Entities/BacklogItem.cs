@@ -36,5 +36,10 @@ namespace AvansDevOps.Entities
         {
             this.storyPoints = storyPoints;
         }
+
+        public override string ToString()
+        {
+            return $"{this.task}: {this.storyPoints} story point(s)";
+        }
     }
 }

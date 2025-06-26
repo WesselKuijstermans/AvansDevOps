@@ -6,16 +6,10 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    public class FormMessage
+    public class FormMessage(TeamMember sender, string message)
     {
-        private TeamMember sender;
-        private string message;
-
-        public FormMessage(TeamMember sender, string message)
-        {
-            this.sender = sender;
-            this.message = message;
-        }
+        private TeamMember sender = sender;
+        private string message = message;
 
         public TeamMember GetSender()
         {

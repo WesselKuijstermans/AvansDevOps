@@ -1,4 +1,4 @@
-﻿using AvansDevOps.Adapter;
+﻿using AvansDevOps.AdapterPattern;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +7,7 @@ using System.Threading.Tasks;
 
 namespace AvansDevOps.Entities
 {
-    public class LeadDeveloper: TeamMember
+    public class LeadDeveloper(string name, INotificationAdapter noticationChannel) : TeamMember(name, noticationChannel)
     {
-        public LeadDeveloper(string name, INotificationAdapter noticationChannel) : base(name, noticationChannel)
-        {
-
-        }
     }
 }
