@@ -93,6 +93,9 @@ jobs:
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
+      - name: Install coverlet.collector
+        run: dotnet tool install --global coverlet.console
+
       # - name: Download Coverage Artifact
       #   uses: actions/download-artifact@v4
       #   with:
