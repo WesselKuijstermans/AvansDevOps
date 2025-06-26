@@ -58,7 +58,7 @@ jobs:
           path: .
 
       - name: Run Tests and Collect Coverage
-        run: dotnet test --collect:"Code Coverage;Format=Xml;CoverageFileName=coverage.xml" --results-directory ./coverage
+        run: dotnet test ./AvansDevOps/AvansDevOps.sln --collect:"Code Coverage;Format=Xml;CoverageFileName=coverage.xml" --results-directory ./coverage
 
   sonarcloud:
     runs-on: ubuntu-latest
