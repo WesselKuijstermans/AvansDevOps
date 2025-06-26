@@ -116,7 +116,11 @@ jobs:
           dotnet-coverage collect \
             'dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release' \
             -f opencover \
-            -o coverage/coverage.opencover.xml
+            -o coverage/coverage.opencover.xml \
+            --include "[AvansDevOps*]*"
+
+      - name: Dump coverage file
+        run: cat coverage/coverage.opencover.xml
   
       - name: SonarCloud End
         run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
