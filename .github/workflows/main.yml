@@ -68,6 +68,9 @@ jobs:
           output: 'coverage.cobertura.xml'
           outputFormat: 'cobertura'
           debug: true
+
+      - name: Pretty-print coverage XML
+        run: xmllint --format ./AvansDevOpsTest/coverage.cobertura.xml
   
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
