@@ -99,15 +99,6 @@ jobs:
           name: coverage-report
           path: coverage
 
-      - name: Downgrade Cobertura version for SonarCloud
-        run: |
-          if grep -q 'version="1.9"' coverage/coverage.cobertura.xml; then
-            sed -i 's/version="1.9"/version="1"/' coverage/coverage.cobertura.xml
-            echo "Cobertura version downgraded to 1"
-          else
-            echo "No downgrade needed"
-          fi
-
       - name: Run SonarCloud Analysis
         run: |
           dotnet sonarscanner begin /k:"WesselKuijstermans_AvansDevOps" \
