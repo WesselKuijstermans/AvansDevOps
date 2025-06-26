@@ -95,12 +95,6 @@ jobs:
 
       - name: Install dotnet coverage
         run: dotnet tool install --global dotnet-coverage
-        
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
-          path: .
 
       - name: SonarCloud Begin
         run: |
@@ -112,6 +106,9 @@ jobs:
             /d:sonar.cs.opencover.reportsPaths=coverage/coverage.opencover.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Build solution
+        run: dotnet build AvansDevOps/AvansDevOps.sln --no-incremental --configuration Release
   
       - name: Collect OpenCover coverage
         run: |
