@@ -62,7 +62,7 @@ jobs:
         uses: b3b00/coverlet-action@1.2.5
         with:
           testProject: 'AvansDevOpsTest/AvansDevOpsTest.csproj'
-          output: './TestResults/coverage.cobertura.xml'
+          output: 'TestResults/coverage.cobertura.xml'
           outputFormat: 'cobertura'
 
       - name: Find coverage files
