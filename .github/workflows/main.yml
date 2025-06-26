@@ -60,10 +60,7 @@ jobs:
       - name: Run Tests and Generate Coverage
         run: |
           mkdir -p TestResults
-          dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=cobertura \
-            /p:CoverletOutput=TestResults/coverage.cobertura.xml
+          dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/coverage.cobertura.xml
 
       - name: check file location
         run: find . -name '*.xml'
