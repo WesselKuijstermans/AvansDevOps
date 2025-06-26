@@ -60,7 +60,7 @@ jobs:
       - name: Run Tests and Generate Coverage
         run: |
           mkdir -p TestResults
-          cd AvansDevOpsTest && dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=TestResults/coverage.opencover.xml
+          cd AvansDevOpsTest && dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=coverlet /p:CoverletOutput=TestResults/coverage.coverlet.xml
 
       - name: check file location
         run: find . -name '*.xml'
@@ -68,15 +68,15 @@ jobs:
       - name: Show coverage file details
         run: |
           echo "File size:"
-          stat ./AvansDevOpsTest/TestResults/coverage.opencover.xml || echo "File not found"
+          stat ./AvansDevOpsTest/TestResults/coverage.coverlet.xml || echo "File not found"
           echo "File contents:"
-          cat ./AvansDevOpsTest/TestResults/coverage.opencover.xml || echo "No contents"
+          cat ./AvansDevOpsTest/TestResults/coverage.coverlet.xml || echo "No contents"
   
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ./AvansDevOpsTest/TestResults/coverage.opencover.xml
+          path: ./AvansDevOpsTest/TestResults/coverage.coverlet.xml
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -93,11 +93,11 @@ jobs:
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Download Coverage Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage
+      # - name: Download Coverage Artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: coverage-report
+      #     path: coverage
 
       - name: Run SonarCloud Analysis
         run: |
@@ -105,8 +105,13 @@ jobs:
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
             /o:wesselkuijstermans-1 \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.coverageReportPaths=coverage/coverage.opencover.xml
-          dotnet build ./AvansDevOps/AvansDevOps.sln --no-incremental
+            /d:sonar.cs.opencover.reportsPaths=coverage/coverage.coverlet.xml
+          dotnet build --no-incremental
+          coverlet ./AvansDevOpsTest/bin/Debug/net8.0/AvansDevOpsTest.dll
+              --target "dotnet" 
+              --targetargs "test --no-build"
+              -f=coverlet 
+              -o="coverage.xml"
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
