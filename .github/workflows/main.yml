@@ -62,14 +62,17 @@ jobs:
         uses: b3b00/coverlet-action@1.2.5
         with:
           testProject: 'AvansDevOpsTest/AvansDevOpsTest.csproj'
-          output: 'coverage.cobertura.xml'
+          output: './TestResults/coverage.cobertura.xml'
           outputFormat: 'cobertura'
+
+      - name: Find coverage files
+        run: find . -name '*.xml'
   
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ${{ steps.coverlet.outputs.coverageFile }}
+          path: ./AvansDevOpsTest/TestResults/coverage.cobertura.xml
 
   sonarcloud:
     runs-on: ubuntu-latest
