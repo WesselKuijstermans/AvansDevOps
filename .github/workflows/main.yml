@@ -112,7 +112,7 @@ jobs:
           dotnet build ./AvansDevOps/AvansDevOps.sln --no-incremental
           coverlet AvansDevOpsTest/bin/Debug/net8.0/AvansDevOpsTest.dll \
               --target "dotnet" \
-              --targetargs "test AvansDevOpsTest/AvansDevOpsTest.sln" \
+              --targetargs "test AvansDevOps/AvansDevOps.sln" \
               -f=cobertura \
               -o="coverage.xml"
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
