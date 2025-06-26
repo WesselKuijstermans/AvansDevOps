@@ -107,7 +107,7 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.cs.opencover.reportsPaths=ccoverage.xml
           dotnet build ./AvansDevOps/AvansDevOps.sln --no-incremental
-          cobertura ./AvansDevOpsTest/bin/Debug/net8.0/AvansDevOpsTest.dll
+          coverlet ./AvansDevOpsTest/bin/Debug/net8.0/AvansDevOpsTest.dll
               --target "dotnet" 
               --targetargs "test --no-build"
               -f=cobertura 
