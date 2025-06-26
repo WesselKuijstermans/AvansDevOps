@@ -59,15 +59,12 @@ jobs:
 
       - name: Run Tests and Collect Coverage
         run: dotnet test ./AvansDevOps/AvansDevOps.sln --collect:"Code Coverage;Format=Xml;CoverageFileName=coverage.xml"
-
-      - name: Find coverage file path
-        run: find . -name coverage.xml
       
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ./TestResults/**/coverage.xml
+          path: ./AvansDevOpsTest/TestResults/**/coverage.xml
 
   sonarcloud:
     runs-on: ubuntu-latest
