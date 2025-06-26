@@ -22,9 +22,6 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install SonarScanner for .NET
-        run: dotnet tool install --global dotnet-sonarscanner
-
       - name: Restore NuGet Packages
         run: dotnet restore ./AvansDevOps/AvansDevOps.sln
 
@@ -54,10 +51,6 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install dotnet-coverage tool
-        run: dotnet tool install --global dotnet-coverage
-
-
       - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
@@ -65,7 +58,7 @@ jobs:
           path: .
 
       - name: Run Tests and Collect Coverage
-        run: dotnet-coverage collect "dotnet test ./AvansDevOps/AvansDevOps.sln --no-build --configuration Release" -f xml -o "coverage.xml"
+        run: dotnet test --collect:"Code Coverage;Format=Xml;CoverageFileName=coverage.xml" --results-directory ./coverage
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -88,7 +81,7 @@ jobs:
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
             /o:wesselkuijstermans-1 \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.vscoveragexml.reportsPaths=TestResults/coverage.xml
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage/coverage.xml
           dotnet build ./AvansDevOps/AvansDevOps.sln --no-incremental
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         env:
