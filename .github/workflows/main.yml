@@ -60,18 +60,20 @@ jobs:
       - name: Run Tests and Generate Coverage
         run: |
           mkdir -p TestResults
-          dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj \
-            --no-build --configuration Release \
+          dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build \
             /p:CollectCoverage=true \
             /p:CoverletOutputFormat=cobertura \
             /p:CoverletOutput=TestResults/coverage.cobertura.xml
 
+      - name: check file location
+        run: find . -name '*.xml'
+
       - name: Show coverage file details
         run: |
           echo "File size:"
-          stat AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "File not found"
+          stat TestResults/coverage.cobertura.xml || echo "File not found"
           echo "File contents:"
-          cat AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "No contents"
+          cat TestResults/coverage.cobertura.xml || echo "No contents"
   
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
