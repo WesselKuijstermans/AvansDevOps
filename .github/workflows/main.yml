@@ -77,7 +77,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ./AvansDevOpsTest/TestResults/coverage.cobertura.xml
+          path: ./AvansDevOpsTest/coverage.cobertura.xml
 
   sonarcloud:
     runs-on: ubuntu-latest
