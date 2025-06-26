@@ -31,13 +31,13 @@ jobs:
       - name: Build project
         run: dotnet build ./AvansDevOps/AvansDevOps.sln --no-restore --configuration Release
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifact
-          path: |
-            **/bin/Release/
-            **/obj/
+      # - name: Upload Build Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: build-artifact
+      #     path: |
+      #       **/bin/Release/
+      #       **/obj/
 
   test:
     runs-on: ubuntu-latest
@@ -51,33 +51,32 @@ jobs:
         with:
           dotnet-version: '8.0.x'
   
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifact
-          path: .
+      # - name: Download Build Artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: build-artifact
+      #     path: .
   
       - name: Run Tests and Generate Coverage
         run: |
           mkdir -p TestResults
-          dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj \
-            --no-build --configuration Release \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=cobertura \
-            /p:CoverletOutput=TestResults/coverage.cobertura.xml
+          cd AvansDevOpsTest && dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/coverage.cobertura.xml
+
+      - name: check file location
+        run: find . -name '*.xml'
 
       - name: Show coverage file details
         run: |
           echo "File size:"
-          stat AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "File not found"
+          stat ./AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "File not found"
           echo "File contents:"
-          cat AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "No contents"
+          cat ./AvansDevOpsTest/TestResults/coverage.cobertura.xml || echo "No contents"
   
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: TestResults/coverage.cobertura.xml
+          path: ./AvansDevOpsTest/TestResults/coverage.cobertura.xml
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -99,6 +98,15 @@ jobs:
         with:
           name: coverage-report
           path: coverage
+
+      - name: Downgrade Cobertura version for SonarCloud
+        run: |
+          if grep -q 'version="1.9"' coverage/coverage.cobertura.xml; then
+            sed -i 's/version="1.9"/version="1"/' coverage/coverage.cobertura.xml
+            echo "Cobertura version downgraded to 1"
+          else
+            echo "No downgrade needed"
+          fi
 
       - name: Run SonarCloud Analysis
         run: |
