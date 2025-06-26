@@ -56,26 +56,24 @@ jobs:
         with:
           name: build-artifact
           path: .
+
+      - name: Create blank coverage file
+        run: touch AvansDevOpsTest/TestResults/coverage.cobertura.xml
   
-      - name: Install Coverlet
-        run: dotnet add AvansDevOpsTest/AvansDevOpsTest.csproj package coverlet.collector
-  
-      - name: Run Tests and Generate Coverage
-        run: |
-          dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj \
-            --no-build --configuration Release \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=cobertura \
-            /p:CoverletOutput=./AvansDevOpsTest/TestResults/coverage.cobertura.xml
-  
-      - name: Show coverage file for debug
-        run: find ./AvansDevOpsTest -name '*.xml'
+      - name: Run Coverlet Coverage
+        id: coverlet
+        uses: b3b00/coverlet-action@1.2.5
+        with:
+          testProject: 'AvansDevOpsTest/AvansDevOpsTest.csproj'
+          output: 'TestResults/coverage.cobertura.xml'
+          outputFormat: 'cobertura'
+          debug: true
   
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: ./AvansDevOpsTest/TestResults/coverage.cobertura.xml
+          path: ${{ steps.coverlet.outputs.coverageFile }}
 
   sonarcloud:
     runs-on: ubuntu-latest
