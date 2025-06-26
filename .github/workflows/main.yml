@@ -95,12 +95,12 @@ jobs:
 
       - name: Install dotnet coverage
         run: dotnet tool install --global dotnet-coverage
-
-      - name: Download Coverage Artifact
+        
+      - name: Download Build Artifact
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
-          path: coverage
+          name: build-artifact
+          path: .
 
       - name: SonarCloud Begin
         run: |
