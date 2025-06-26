@@ -115,8 +115,8 @@ jobs:
           mkdir -p coverage
           dotnet-coverage collect \
             'dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release' \
-            -f opencover \
-            -o coverage/coverage.opencover.xml
+            --output-format opencover \
+            --output coverage/coverage.opencover.xml
 
       - name: Dump coverage file
         run: cat coverage/coverage.opencover.xml
