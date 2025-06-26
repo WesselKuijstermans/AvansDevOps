@@ -58,7 +58,16 @@ jobs:
           path: .
 
       - name: Run Tests and Collect Coverage
-        run: dotnet test ./AvansDevOps/AvansDevOps.sln --collect:"Code Coverage;Format=Xml;CoverageFileName=coverage.xml" --results-directory C:/coverage
+        run: dotnet test ./AvansDevOps/AvansDevOps.sln --collect:"Code Coverage;Format=Xml;CoverageFileName=coverage.xml"
+
+      - name: Find coverage file path
+        run: find . -name coverage.xml
+      
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./TestResults/**/coverage.xml
 
   sonarcloud:
     runs-on: ubuntu-latest
@@ -75,13 +84,19 @@ jobs:
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
+      - name: Download Coverage Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+
       - name: Run SonarCloud Analysis
         run: |
           dotnet sonarscanner begin /k:"WesselKuijstermans_AvansDevOps" \
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
             /o:wesselkuijstermans-1 \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.vscoveragexml.reportsPaths=C:/coverage/coverage.xml
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage/coverage.xml
           dotnet build ./AvansDevOps/AvansDevOps.sln --no-incremental
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         env:
