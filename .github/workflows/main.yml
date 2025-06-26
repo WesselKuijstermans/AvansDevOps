@@ -67,7 +67,8 @@ jobs:
             --no-build --configuration Release \
             /p:CollectCoverage=true \
             /p:CoverletOutputFormat=cobertura \
-            /p:CoverletOutput=AvansDevOpsTest/TestResults/coverage.cobertura.xml
+            /p:CoverletOutput=AvansDevOpsTest/TestResults/coverage.cobertura.xml \
+            --verbosity d
 
       - name: Show coverage file details
         run: |
