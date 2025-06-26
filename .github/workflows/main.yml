@@ -62,7 +62,7 @@ jobs:
         uses: b3b00/coverlet-action@1.2.5
         with:
           testProject: 'AvansDevOpsTest/AvansDevOpsTest.csproj'
-          output: coverage.cobertura.xml
+          output: 'coverage.cobertura.xml'
           outputFormat: 'cobertura'
           debug: true
 
