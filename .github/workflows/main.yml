@@ -93,9 +93,6 @@ jobs:
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
-      - name: Install coverlet.collector
-        run: dotnet tool install --global coverlet.console
-
       # - name: Download Coverage Artifact
       #   uses: actions/download-artifact@v4
       #   with:
@@ -108,13 +105,9 @@ jobs:
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
             /o:wesselkuijstermans-1 \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths=ccoverage.xml
+            /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet build ./AvansDevOps/AvansDevOps.sln --no-incremental
-          coverlet AvansDevOpsTest/bin/Debug/net8.0/AvansDevOpsTest.dll \
-              --target "dotnet" \
-              --targetargs "test AvansDevOps/AvansDevOps.sln" \
-              -f=cobertura \
-              -o="coverage.xml"
+          cd AvansDevOpsTest && dotnet-coverage collect 'dotnet test' -f xml  -o 'coverage.xml'
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
