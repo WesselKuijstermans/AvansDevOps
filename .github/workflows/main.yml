@@ -99,6 +99,10 @@ jobs:
           name: coverage-report
           path: coverage
 
+      - name: Downgrade Cobertura version to 1.0
+        run: |
+          sed -i 's/<version="1.9"/<version="1.0"/' coverage/coverage.cobertura.xml
+
       - name: Run SonarCloud Analysis
         run: |
           dotnet sonarscanner begin /k:"WesselKuijstermans_AvansDevOps" \
