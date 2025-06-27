@@ -54,8 +54,8 @@ jobs:
           
           dotnet build AvansDevOps/AvansDevOps.sln
           
-          dotnet-coverage collect -o "coverage.xml" -f xml --exclude "[AvansDevOps]AvansDevOps.Program" --exclude "[AvansDevOps]AvansDevOps.ConsoleInputHelper" -- dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release            
-          
+          dotnet-coverage collect --output "coverage.xml" --format xml --include-files "AvansDevOps/Entities/*,AvansDevOps/Enums/*,AvansDevOps/FacadePattern/*,AvansDevOps/FactoryPattern/*,AvansDevOps/FormMessageObersverPattern/*,AvansDevOps/ItemStateObserverPattern/*,AvansDevOps/ItemStatePattern/*,AvansDevOps/AdapterPattern/*,AvansDevOps/PipelineStrategyPattern/*,AvansDevOps/SprintStateObersverPattern/*,AvansDevOps/SprintStatePattern/*,AvansDevOps/VersionControlStrategyPattern/*" -- dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release
+         
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
 # dotnet-coverage collect 'dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release' --output $(pwd)/coverage/coverage.cobertura.xml --output-format cobertura
