@@ -1,5 +1,4 @@
 ﻿using System.CommandLine;
-using AvansDevOps;
 using AvansDevOps.AdapterPattern;
 using AvansDevOps.Entities;
 using AvansDevOps.Enums;
@@ -9,6 +8,8 @@ using AvansDevOps.PipelineStrategyPattern;
 using AvansDevOps.SprintStateObersverPattern;
 using AvansDevOps.VersionControlStrategyPattern;
 using Spectre.Console;
+
+namespace AvansDevOps;
 
 class Program {
     static async Task Main() {
