@@ -53,11 +53,14 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"WesselKuijstermans_AvansDevOps" /o:"wesselkuijstermans-1" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
           
           dotnet build AvansDevOps/AvansDevOps.sln
-
+      
           cd $env:GITHUB_WORKSPACE
-          
-          dotnet-coverage collect 'dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release' --output "coverage.xml" --format xml --include-files "AvansDevOps/Entities/*,AvansDevOps/Enums/*,AvansDevOps/FacadePattern/*,AvansDevOps/FactoryPattern/*,AvansDevOps/FormMessageObersverPattern/*,AvansDevOps/ItemStateObserverPattern/*,AvansDevOps/ItemStatePattern/*,AvansDevOps/AdapterPattern/*,AvansDevOps/PipelineStrategyPattern/*,AvansDevOps/SprintStateObersverPattern/*,AvansDevOps/SprintStatePattern/*,AvansDevOps/VersionControlStrategyPattern/*"
-         
+      
+          dotnet-coverage collect dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release `
+            --output "coverage.xml" `
+            --format xml `
+            --include-files "AvansDevOps/Entities/*,AvansDevOps/Enums/*,AvansDevOps/FacadePattern/*,AvansDevOps/FactoryPattern/*,AvansDevOps/FormMessageObersverPattern/*,AvansDevOps/ItemStateObserverPattern/*,AvansDevOps/ItemStatePattern/*,AvansDevOps/AdapterPattern/*,AvansDevOps/PipelineStrategyPattern/*,AvansDevOps/SprintStateObersverPattern/*,AvansDevOps/SprintStatePattern/*,AvansDevOps/VersionControlStrategyPattern/*"
+      
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
 # dotnet-coverage collect 'dotnet test AvansDevOpsTest/AvansDevOpsTest.csproj --no-build --configuration Release' --output $(pwd)/coverage/coverage.cobertura.xml --output-format cobertura
