@@ -1,46 +1,31 @@
 ﻿using AvansDevOps.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Spectre.Console;
 
-namespace AvansDevOps.ItemStatePattern
-{
-    public class TestedState(SprintItem sprintItem) : IItemState
-    {
+namespace AvansDevOps.ItemStatePattern {
+    public class TestedState(SprintItem sprintItem) : IItemState {
         private readonly SprintItem _sprintItem = sprintItem;
 
-        public void AssignDeveloper(TeamMember teamMember)
-        {
+        public void AssignDeveloper(TeamMember teamMember) {
             AnsiConsole.WriteLine("Item already tested. No developer can be assigned.");
         }
 
-        public void ReadyForTesting()
-        {
+        public void ReadyForTesting() {
             AnsiConsole.WriteLine("Tests already succeeded");
         }
 
-        public void TestSucceeded()
-        {
+        public void TestSucceeded() {
             AnsiConsole.WriteLine("Tests already succeeded");
         }
 
-        public void TestFailed()
-        {
+        public void TestFailed() {
             AnsiConsole.WriteLine("Tests already succeeded");
         }
 
-        public void DefinitionOfDoneCheck()
-        {
+        public void DefinitionOfDoneCheck() {
             List<SprintItem> subTasks = _sprintItem.GetSubtasks();
-            if (subTasks.Count != 0)
-            {
-                for (int i = 0; i < subTasks.Count; i++)
-                {
-                    if (subTasks[i].GetState().GetType() != typeof(DoneState))
-                    {
+            if (subTasks.Count != 0) {
+                for (int i = 0 ; i < subTasks.Count ; i++) {
+                    if (subTasks[i].GetState().GetType() != typeof(DoneState)) {
                         AnsiConsole.WriteLine("Item does not meet the definition of done.");
                         AnsiConsole.WriteLine("Subtask " + subTasks[i].GetBacklogItem().GetTask() + " is not done.");
                         _sprintItem.SetState(new ReadyForTestingState(_sprintItem));
@@ -49,7 +34,7 @@ namespace AvansDevOps.ItemStatePattern
                 }
             }
             AnsiConsole.WriteLine("Item meets the definition of done.");
-            _sprintItem.SetState(new DoneState(_sprintItem));
+            _sprintItem.SetState(new DoneState());
         }
     }
 }

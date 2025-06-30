@@ -1,25 +1,17 @@
 ﻿using AvansDevOps.AdapterPattern;
 using AvansDevOps.Entities;
-using AvansDevOps.SprintStatePattern;
 using AvansDevOps.PipelineStrategyPattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AvansDevOps.SprintStatePattern;
 
-namespace AvansDevOpsTest
-{
-    public class SprintStateTest
-    {
+namespace AvansDevOpsTest {
+    public class SprintStateTest {
         private readonly Project project;
         private readonly NotificationService notificationService;
         private readonly Sprint sprintWithPipeline;
         private readonly Sprint sprint;
         private readonly TeamMember developer;
 
-        public SprintStateTest()
-        {
+        public SprintStateTest() {
             this.project = new Project("TestProject");
             this.notificationService = new(project);
             var startDate = DateTime.Now;
@@ -35,24 +27,21 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void ConceptSprintState_Should_Transition_To_InProgressSprintState()
-        {
+        public void ConceptSprintState_Should_Transition_To_InProgressSprintState() {
             sprint.SetState(new ConceptSprintState(sprint));
             sprint.StartSprint();
             Assert.IsType<InProgressSprintState>(sprint.GetState());
         }
 
         [Fact]
-        public void InProgressSprintState_Should_Transition_To_StoppedSprintState()
-        {
+        public void InProgressSprintState_Should_Transition_To_StoppedSprintState() {
             sprint.SetState(new InProgressSprintState(sprint));
             sprint.StopSprint();
             Assert.IsType<StoppedSprintState>(sprint.GetState());
         }
 
         [Fact]
-        public void StoppedSprintState_Without_Pipeline_Should_Transition_To_FinishedSprintState_When_Uploading_Summary()
-        {
+        public void StoppedSprintState_Without_Pipeline_Should_Transition_To_FinishedSprintState_When_Uploading_Summary() {
             sprint.SetState(new StoppedSprintState(sprint));
             sprint.UploadSummary("Test");
             Assert.IsType<FinishedSprintState>(sprint.GetState());
@@ -60,17 +49,15 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void StoppedSprintState_With_Pipeline_Should_Transition_To_FinishedSprintState_When_Starting_Release()
-        {
+        public void StoppedSprintState_With_Pipeline_Should_Transition_To_FinishedSprintState_When_Starting_Release() {
             sprintWithPipeline.SetState(new StoppedSprintState(sprintWithPipeline));
             sprintWithPipeline.StartRelease();
             Assert.IsType<FinishedSprintState>(sprintWithPipeline.GetState());
         }
 
         [Fact]
-        public void FinishedSprintState_Should_Not_Allow_Any_Transitions()
-        {
-            sprint.SetState(new FinishedSprintState(sprint));
+        public void FinishedSprintState_Should_Not_Allow_Any_Transitions() {
+            sprint.SetState(new FinishedSprintState());
             sprint.StartSprint();
             sprint.StopSprint();
             sprint.UploadSummary("Test");
@@ -79,8 +66,7 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void ConceptSprintState_Should_Not_Allow_Release_Summary_Or_Stop()
-        {
+        public void ConceptSprintState_Should_Not_Allow_Release_Summary_Or_Stop() {
             sprint.SetState(new ConceptSprintState(sprint));
             sprint.StartRelease();
             sprint.UploadSummary("Test");
@@ -89,8 +75,7 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void InProgressSprintState_Should_Not_Allow_Release_Summary_Or_Start()
-        {
+        public void InProgressSprintState_Should_Not_Allow_Release_Summary_Or_Start() {
             sprint.SetState(new InProgressSprintState(sprint));
             sprint.StartRelease();
             sprint.UploadSummary("Test");
@@ -99,8 +84,7 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void StoppedSprintState_With_Pipeline_Should_Not_Allow_Start_Stop_Or_UploadSummary()
-        {
+        public void StoppedSprintState_With_Pipeline_Should_Not_Allow_Start_Stop_Or_UploadSummary() {
             sprintWithPipeline.SetState(new StoppedSprintState(sprintWithPipeline));
             sprintWithPipeline.StartSprint();
             sprintWithPipeline.StopSprint();
@@ -109,8 +93,7 @@ namespace AvansDevOpsTest
         }
 
         [Fact]
-        public void StoppedSprintState_Without_Pipeline_Should_Not_Allow_Start_Stop_Or_StartRelease()
-        {
+        public void StoppedSprintState_Without_Pipeline_Should_Not_Allow_Start_Stop_Or_StartRelease() {
             sprint.SetState(new StoppedSprintState(sprint));
             sprint.StartSprint();
             sprint.StopSprint();

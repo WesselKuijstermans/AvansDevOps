@@ -13,12 +13,12 @@ namespace AvansDevOps.Entities {
         private DateTime startDate;
         private DateTime endDate;
         private readonly List<SprintItem> sprintBacklog;
-        private Pipeline pipeline;
+        private Pipeline? pipeline;
         private ISprintState state;
         private readonly ISprintStateObserver observer;
         private string summary;
 
-        public Sprint(string name, DateTime startDate, DateTime endDate, Pipeline pipeline, ISprintStateObserver observer) {
+        public Sprint(string name, DateTime startDate, DateTime endDate, Pipeline? pipeline, ISprintStateObserver observer) {
             this.name = name;
             this.startDate = startDate;
             this.endDate = endDate;
@@ -72,7 +72,7 @@ namespace AvansDevOps.Entities {
 
 
         public void AddSprintItem(BacklogItem backlogItem, IItemStateObserver itemObserver, IFormMessageObserver formObserver, IVersionControlStrategy strategy) {
-            SprintItem sprintItem = new SprintItem(backlogItem, itemObserver, formObserver, new VersionControlFacade(strategy, null));
+            SprintItem sprintItem = new(backlogItem, itemObserver, formObserver, new VersionControlFacade(strategy, null));
             sprintItem.versionControlFacade = new VersionControlFacade(strategy, sprintItem);
             this.sprintBacklog.Add(sprintItem);
 

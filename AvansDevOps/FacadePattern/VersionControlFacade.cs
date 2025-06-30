@@ -3,9 +3,9 @@ using AvansDevOps.VersionControlStrategyPattern;
 using Spectre.Console;
 
 namespace AvansDevOps.FacadePattern {
-    public class VersionControlFacade(IVersionControlStrategy strategy, SprintItem sprintItem) {
+    public class VersionControlFacade(IVersionControlStrategy strategy, SprintItem? sprintItem) {
         private readonly IVersionControlStrategy Strategy = strategy;
-        public SprintItem SprintItem { get; } = sprintItem;
+        public SprintItem? SprintItem { get; } = sprintItem;
         private readonly List<Branch> Branches = [];
         public Branch? CurrentBranch { get; set; } = null;
 

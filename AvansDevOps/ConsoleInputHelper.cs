@@ -8,7 +8,7 @@ namespace AvansDevOps {
     [ExcludeFromCodeCoverage]
     public class ConsoleInputHelper {
 
-        public string[] ParseCommandLine(string commandLine) {
+        public static string[] ParseCommandLine(string commandLine) {
             var args = new List<string>();
             var currentArg = new StringBuilder();
             bool inQuotes = false;
@@ -34,7 +34,7 @@ namespace AvansDevOps {
             return [.. args];
         }
 
-        public string UserInput(string prompt) {
+        public static string UserInput(string prompt) {
             var cancelTokens = new[] { "q", "quit", "cancel" };
             string input = AnsiConsole.Ask<string>($"[blue]{prompt}[/] (to cancel: {string.Join(", ", cancelTokens)}) >");
             if (string.IsNullOrWhiteSpace(input)) {
@@ -46,7 +46,7 @@ namespace AvansDevOps {
             return input.Trim();
         }
 
-        public TEnum? EnumSelection<TEnum>(string prompt) where TEnum : struct, Enum {
+        public static TEnum? EnumSelection<TEnum>(string prompt) where TEnum : struct, Enum {
             var choices = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToList();
             var cancelToken = "[red]Cancel[/]";
 
@@ -64,9 +64,9 @@ namespace AvansDevOps {
             return Enum.TryParse<TEnum>(selected, out var result) ? result : null;
         }
 
-        public T? ListSelection<T>(string prompt, IEnumerable<T> items) where T : class {
+        public static T? ListSelection<T>(string prompt, IEnumerable<T> items) where T : class {
             var itemList = items.ToList();
-            if (!itemList.Any()) {
+            if (itemList.Count == 0) {
                 AnsiConsole.MarkupLine("[red]No items available to select.[/]");
                 return null;
             }
@@ -91,16 +91,16 @@ namespace AvansDevOps {
             return itemList[chosen.Index];
         }
 
-        public int IntUserInput(string prompt) {
+        public static int IntUserInput(string prompt) {
             return AnsiConsole.Ask<int>($"[blue]{prompt}[/] (enter negative value to cancel) >");
         }
 
-        public bool BoolUserInput(string prompt, bool defaultValue) {
+        public static bool BoolUserInput(string prompt, bool defaultValue) {
             string defaultValueString = defaultValue ? "Y/n" : "y/N";
             return AnsiConsole.Confirm($"[blue]{prompt}[/] ({defaultValueString}) >", defaultValue);
         }
 
-        public void HandleSCMCommand(string command, SprintItem sprintItem) {
+        public static void HandleSCMCommand(string command, SprintItem sprintItem) {
             string commandBase = sprintItem.versionControlFacade.GetStrategy().GetType().Name.ToLowerInvariant().Replace("versioncontrolstrategy", string.Empty);
             string[] parts = command.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 0) {

@@ -1,7 +1,7 @@
 ﻿namespace AvansDevOps.Entities {
     public class Branch {
         public string Name { get; }
-        private List<Commit> Commits = [];
+        private readonly List<Commit> Commits = [];
 
         public Branch(string name) {
             this.Name = name;

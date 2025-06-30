@@ -1,23 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AvansDevOps.FormMessageObersverPattern;
+﻿using AvansDevOps.FormMessageObersverPattern;
 using AvansDevOps.ItemStateObserverPattern;
 using AvansDevOps.ItemStatePattern;
 using AvansDevOps.SprintStateObersverPattern;
 using AvansDevOps.SprintStatePattern;
 
-namespace AvansDevOps.Entities
-{
-    public class NotificationService(Project project) : IItemStateObserver, ISprintStateObserver, IFormMessageObserver
-    {
-        public void ItemUpdate(IItemState newState, SprintItem item)
-        {
+namespace AvansDevOps.Entities {
+    public class NotificationService(Project project) : IItemStateObserver, ISprintStateObserver, IFormMessageObserver {
+        public void ItemUpdate(IItemState newState, SprintItem item) {
             string message = "The item " + item.GetBacklogItem().GetTask() + " from the project '" + project.GetName() + "' is now in state " + newState.GetType().Name;
-            switch (newState)
-            {
+            switch (newState) {
                 case TestedState:
                     NotifySrumMaster(message);
                     break;
@@ -31,11 +22,9 @@ namespace AvansDevOps.Entities
             }
         }
 
-        public void SprintUpdate(ISprintState newState, Sprint sprint)
-        {
+        public void SprintUpdate(ISprintState newState, Sprint sprint) {
             string message = "The sprint " + sprint.GetName() + " from the project '" + project.GetName() + "' is now in state " + newState.GetType().Name;
-            switch (newState)
-            {
+            switch (newState) {
                 case InProgressSprintState:
                     break;
                 case StoppedSprintState:
@@ -46,42 +35,31 @@ namespace AvansDevOps.Entities
             }
         }
 
-        public void FormUpdate(string notification, List<TeamMember> teamMembers)
-        {
-            foreach (TeamMember teamMember in teamMembers)
-            {
-                teamMember.Notify("New message in item form", notification);
+        public void FormUpdate(string formMessage, List<TeamMember> membersToNotify) {
+            foreach (TeamMember teamMember in membersToNotify) {
+                teamMember.Notify("New message in item form", formMessage);
             }
         }
 
-        private void NotifyTesters(string message)
-        {
-            foreach (TeamMember teamMember in project.GetTeamMembers())
-            {
-                if (teamMember is Tester)
-                {
+        private void NotifyTesters(string message) {
+            foreach (TeamMember teamMember in project.GetTeamMembers()) {
+                if (teamMember is Tester) {
                     teamMember.Notify("New item state", message);
                 }
             }
         }
 
-        private void NotifyDevelopers(string message)
-        {
-            foreach (TeamMember teamMember in project.GetTeamMembers())
-            {
-                if (teamMember is Developer || teamMember is LeadDeveloper)
-                {
+        private void NotifyDevelopers(string message) {
+            foreach (TeamMember teamMember in project.GetTeamMembers()) {
+                if (teamMember is Developer || teamMember is LeadDeveloper) {
                     teamMember.Notify("New item state", message);
                 }
             }
         }
 
-        private void NotifySrumMaster(string message)
-        {
-            foreach (TeamMember teamMember in project.GetTeamMembers())
-            {
-                if (teamMember is ScrumMaster)
-                {
+        private void NotifySrumMaster(string message) {
+            foreach (TeamMember teamMember in project.GetTeamMembers()) {
+                if (teamMember is ScrumMaster) {
                     teamMember.Notify("New item state", message);
                 }
             }

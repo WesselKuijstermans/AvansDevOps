@@ -1,80 +1,58 @@
-﻿using AvansDevOps.FormMessageObersverPattern;
-using AvansDevOps.ItemStatePattern;
-using AvansDevOps.PipelineStrategyPattern;
+﻿using AvansDevOps.PipelineStrategyPattern;
 using AvansDevOps.SprintStateObersverPattern;
-using AvansDevOps.SprintStatePattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace AvansDevOps.Entities
-{
-    public class Project(string name)
-    {
+namespace AvansDevOps.Entities {
+    public class Project(string name) {
         private readonly string name = name;
         private readonly List<TeamMember> teamMembers = [];
         private readonly List<Sprint> sprints = [];
         private readonly List<BacklogItem> backlog = [];
 
-        public string GetName()
-        {
+        public string GetName() {
             return this.name;
         }
 
-        public void AddSprint(string name, DateTime startDate, DateTime endDate, Pipeline pipeline, ISprintStateObserver observer)
-        {
+        public void AddSprint(string name, DateTime startDate, DateTime endDate, Pipeline? pipeline, ISprintStateObserver observer) {
             Sprint sprint = new(name, startDate, endDate, pipeline, observer);
             sprints.Add(sprint);
         }
 
-        public void RemoveSprint(string name)
-        {
+        public void RemoveSprint(string name) {
             var sprint = sprints.Find(s => s.GetName() == name);
-            if (sprint != null)
-            {
+            if (sprint != null) {
                 sprints.Remove(sprint);
             }
         }
 
-        public List<Sprint> GetSprints()
-        {
+        public List<Sprint> GetSprints() {
             return sprints;
         }
 
-        public void AddTeamMember(TeamMember teamMember)
-        {
+        public void AddTeamMember(TeamMember teamMember) {
             teamMembers.Add(teamMember);
         }
 
-        public void RemoveTeamMember(TeamMember teamMember)
-        {
+        public void RemoveTeamMember(TeamMember teamMember) {
             teamMembers.Remove(teamMember);
         }
 
-        public List<TeamMember> GetTeamMembers()
-        {
+        public List<TeamMember> GetTeamMembers() {
             return teamMembers;
         }
 
-        public void AddBacklogItem(BacklogItem backlogItem)
-        {
+        public void AddBacklogItem(BacklogItem backlogItem) {
             backlog.Add(backlogItem);
         }
 
-        public void RemoveBacklogItem(BacklogItem backlogItem)
-        {
+        public void RemoveBacklogItem(BacklogItem backlogItem) {
             backlog.Remove(backlogItem);
         }
 
-        public List<BacklogItem> GetBacklogItems()
-        {
+        public List<BacklogItem> GetBacklogItems() {
             return backlog;
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return name;
         }
     }

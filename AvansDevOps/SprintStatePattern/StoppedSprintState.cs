@@ -6,17 +6,18 @@ namespace AvansDevOps.SprintStatePattern {
         private readonly Sprint _sprint = sprint;
 
         public bool StartRelease() {
-            if (_sprint.GetPipelineSteps() == null) {
+            var pipelineSteps = _sprint.GetPipelineSteps();
+            if (pipelineSteps == null) {
                 AnsiConsole.WriteLine("This is not a release sprint. Cannot start release.");
                 return false;
-            } else if (_sprint.GetPipelineSteps().Count == 0) {
+            } else if (pipelineSteps.Count == 0) {
                 AnsiConsole.WriteLine("No steps in the pipeline. Cannot start release.");
                 return false;
             }
             AnsiConsole.WriteLine("Release started.");
             if (_sprint.RunPipeline()) {
                 AnsiConsole.WriteLine("Pipeline has successfully run! Sprint has been marked as finished");
-                _sprint.SetState(new FinishedSprintState(_sprint));
+                _sprint.SetState(new FinishedSprintState());
                 return true;
             }
             AnsiConsole.WriteLine("The pipeline has failed. Check for errors and try again.");
@@ -33,14 +34,15 @@ namespace AvansDevOps.SprintStatePattern {
         }
 
         public void UploadSummary(string summary) {
-            if (_sprint.GetPipelineSteps() != null) {
+            var pipelineSteps = _sprint.GetPipelineSteps();
+            if (pipelineSteps != null) {
                 AnsiConsole.WriteLine("This is a release sprint. Cannot upload summary.");
                 return;
             }
             _sprint.SetSummary(summary);
             AnsiConsole.WriteLine("Summary uploaded.");
             AnsiConsole.WriteLine("Sprint has been stopped. No more changes can be made.");
-            _sprint.SetState(new FinishedSprintState(_sprint));
+            _sprint.SetState(new FinishedSprintState());
         }
     }
 }

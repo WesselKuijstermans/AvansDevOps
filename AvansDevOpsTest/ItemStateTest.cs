@@ -12,7 +12,7 @@ namespace AvansDevOpsTest {
         private readonly SprintItem item;
         private readonly TeamMember developer;
         private readonly NotificationService notificationService;
-        private readonly VersionControlFacade versionControlFacade;
+        private readonly VersionControlFacade? versionControlFacade;
 
         public ItemStateTest() {
             this.project = new Project("Test Project");
@@ -102,7 +102,7 @@ namespace AvansDevOpsTest {
         public void Tested_Should_Transition_To_Done_If_DefinitionOfDone_SubtasksDone() {
             this.item.SetState(new TestedState(item));
             this.item.AddSubtask(new SprintItem(new BacklogItem("Subtask", 1), notificationService, notificationService, versionControlFacade));
-            this.item.GetSubtasks()[0].SetState(new DoneState(item));
+            this.item.GetSubtasks()[0].SetState(new DoneState());
             this.item.DefinitionOfDoneCheck();
 
             Assert.Equal("DoneState", this.item.GetState().GetType().Name);
@@ -132,7 +132,7 @@ namespace AvansDevOpsTest {
 
         [Fact]
         public void Done_Should_Not_Be_Able_To_Transtition() {
-            this.item.SetState(new DoneState(item));
+            this.item.SetState(new DoneState());
             this.item.AssignDeveloper(this.developer);
             this.item.ReadyForTesting();
             this.item.TestFailed();

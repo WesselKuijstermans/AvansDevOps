@@ -13,9 +13,9 @@ namespace AvansDevOps.Entities {
         private readonly IItemStateObserver itemStateObserver;
         private readonly IFormMessageObserver formObserver;
         private readonly List<FormMessage> messages;
-        public VersionControlFacade versionControlFacade;
+        public VersionControlFacade? versionControlFacade;
 
-        public SprintItem(BacklogItem backlogItem, IItemStateObserver itemObserver, IFormMessageObserver formObserver, VersionControlFacade facade) {
+        public SprintItem(BacklogItem backlogItem, IItemStateObserver itemObserver, IFormMessageObserver formObserver, VersionControlFacade? facade) {
             this.backlogItem = backlogItem;
             this.subtasks = [];
             this.state = new TodoState(this);
@@ -95,9 +95,8 @@ namespace AvansDevOps.Entities {
         }
 
         public void Commit(string message) {
-            TeamMember? developer = this.GetDeveloper();
-            if (developer is not null) {
-                versionControlFacade.Commit(message, developer);
+            if (this.developer is not null) {
+                versionControlFacade.Commit(message, this.developer);
             } else {
                 AnsiConsole.WriteLine("No developer assigned to commit changes.");
             }

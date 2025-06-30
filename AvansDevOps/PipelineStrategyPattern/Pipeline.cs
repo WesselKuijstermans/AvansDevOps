@@ -4,7 +4,7 @@ namespace AvansDevOps.PipelineStrategyPattern {
     public abstract class Pipeline {
         private readonly List<IPipelineStep> steps;
 
-        public Pipeline() {
+        protected Pipeline() {
             steps = [];
         }
 
