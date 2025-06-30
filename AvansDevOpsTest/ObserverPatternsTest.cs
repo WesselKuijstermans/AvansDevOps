@@ -1,9 +1,9 @@
-﻿using AvansDevOps.AdapterPattern;
-using AvansDevOps.Entities;
+﻿using AvansDevOps.Entities;
 using AvansDevOps.FacadePattern;
 using AvansDevOps.FormMessageObersverPattern;
 using AvansDevOps.ItemStateObserverPattern;
 using AvansDevOps.ItemStatePattern;
+using AvansDevOps.NotificationAdapterPattern;
 using AvansDevOps.PipelineStrategyPattern;
 using AvansDevOps.SprintStateObersverPattern;
 using AvansDevOps.SprintStatePattern;

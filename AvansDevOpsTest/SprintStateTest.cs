@@ -1,5 +1,5 @@
-﻿using AvansDevOps.AdapterPattern;
-using AvansDevOps.Entities;
+﻿using AvansDevOps.Entities;
+using AvansDevOps.NotificationAdapterPattern;
 using AvansDevOps.PipelineStrategyPattern;
 using AvansDevOps.SprintStatePattern;
 
