@@ -10,8 +10,8 @@ namespace AvansDevOpsTest {
         public PipelineTest() {
             var startDate = DateTime.Now; // Example start date
             var endDate = startDate.AddDays(14); // Example end date (2 weeks sprint)
-            Pipeline pipeline = null; // Assuming no pipeline is set initially
-            NotificationService observer = new NotificationService(project);
+            Pipeline? pipeline = null; // Assuming no pipeline is set initially
+            NotificationService observer = new(project);
             project.AddSprint("Sprint 1", startDate, endDate, pipeline, observer);
             this.sprint = project.GetSprints()[0];
             this.sprint.SetState(new StoppedSprintState(sprint));
@@ -39,8 +39,11 @@ namespace AvansDevOpsTest {
             sprint.SetPipeline(new DeployPipeline());
             var buildStep = new BuildStep();
             var testStep = new TestStep();
+            var deployStep = new DeployStep();
             sprint.AddStepToPipeline(buildStep);
             sprint.AddStepToPipeline(testStep);
+            sprint.AddStepToPipeline(deployStep);
+            sprint.RemoveStepFromPipeline(deployStep);
 
             // Act
             var result = sprint.GetPipelineSteps();

@@ -19,9 +19,9 @@ namespace AvansDevOps.PipelineStrategyPattern {
         abstract public List<IPipelineStep> GetSteps();
 
         public bool RunPipeline(bool result) {
-            var steps = GetSteps();
-            if (steps.Count > 0) {
-                foreach (IPipelineStep step in steps) {
+            var stepsToRun = GetSteps();
+            if (stepsToRun.Count > 0) {
+                foreach (IPipelineStep step in stepsToRun) {
                     step.Execute();
                 }
                 if (!result) {
