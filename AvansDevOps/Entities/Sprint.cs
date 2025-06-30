@@ -13,7 +13,7 @@ namespace AvansDevOps.Entities {
         private DateTime startDate;
         private DateTime endDate;
         private readonly List<SprintItem> sprintBacklog;
-        private readonly Pipeline pipeline;
+        private Pipeline pipeline;
         private ISprintState state;
         private readonly ISprintStateObserver observer;
         private string summary;
@@ -112,6 +112,10 @@ namespace AvansDevOps.Entities {
                 return null;
             }
             return this.pipeline.GetSteps();
+        }
+
+        public void SetPipeline(Pipeline pipeline) {
+            this.pipeline = pipeline;
         }
 
         public bool RunPipeline() {

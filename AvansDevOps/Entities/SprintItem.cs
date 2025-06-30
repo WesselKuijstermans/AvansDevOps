@@ -95,7 +95,7 @@ namespace AvansDevOps.Entities {
         }
 
         public void Commit(string message) {
-            var developer = this.GetDeveloper();
+            TeamMember? developer = this.GetDeveloper();
             if (developer is not null) {
                 versionControlFacade.Commit(message, developer);
             } else {

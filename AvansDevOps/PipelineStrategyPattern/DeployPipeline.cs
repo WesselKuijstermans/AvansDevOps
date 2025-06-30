@@ -3,7 +3,11 @@
 namespace AvansDevOps.PipelineStrategyPattern {
     public class DeployPipeline : Pipeline {
         public override List<IPipelineStep> GetSteps() {
-            return [.. base.StepsList(), new DeployStep()];
+            var stepsToReturn = base.StepsList();
+            if (!stepsToReturn.Any(step => step is DeployStep)) {
+                stepsToReturn.Add(new DeployStep());
+            }
+            return stepsToReturn;
         }
 
         public override bool RunPipeline(bool result) {

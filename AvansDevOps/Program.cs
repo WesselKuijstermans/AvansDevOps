@@ -773,6 +773,59 @@ class Program {
             item.DefinitionOfDoneCheck();
         });
 
+        var setPipelineCommand = new Command("set-pipeline", "Set the pipeline type for a sprint");
+        setPipelineCommand.SetAction((context) => {
+            if (projects.Count == 0) {
+                AnsiConsole.MarkupLine("[red]No projects available to set a pipeline for.[/]");
+                return;
+            }
+            Project? project = helper.ListSelection<Project>("Select a project to set a pipeline for:", projects);
+            if (project == null)
+                return; // User cancelled selection
+            if (project.GetSprints().Count == 0) {
+                AnsiConsole.MarkupLine("[red]No sprints available in this project.[/]");
+                return;
+            }
+            Sprint? sprint = helper.ListSelection<Sprint>("Select a sprint to set a pipeline for:", project.GetSprints());
+            if (sprint == null)
+                return; // User cancelled selection
+            PipelineType? pipelineType = helper.EnumSelection<PipelineType>("Select the pipeline type for the sprint");
+            if (pipelineType == null)
+                return; // User cancelled selection
+            Pipeline pipeline = pipelineType switch {
+                PipelineType.Deploy => new DeployPipeline(),
+                PipelineType.Test => new TestPipeline(),
+                _ => throw new ArgumentException("Invalid pipeline type")
+            };
+            List<string> selected = AnsiConsole.Prompt(new MultiSelectionPrompt<string>()
+                .Title("Select pipeline steps to add to the pipeline:")
+                .AddChoices(Enum.GetNames(typeof(PipelineStepType))));
+
+            List<IPipelineStep> steps = [];
+            while (selected.Count > 0) {
+                AnsiConsole.MarkupLine($"[blue]Steps to order:[/] {string.Join(", ", selected)}");
+
+                var nextStep = helper.ListSelection<string>("Choose the order in which to put the selected steps:", selected);
+                if (nextStep == null)
+                    return; // User cancelled selection
+                selected.Remove(nextStep);
+                IPipelineStep step = nextStep switch {
+                    "Analyse" => new AnalyseStep(),
+                    "Build" => new BuildStep(),
+                    "Deploy" => new DeployStep(),
+                    "Package" => new PackageStep(),
+                    "Source" => new SourceStep(),
+                    "Test" => new TestStep(),
+                    "Utility" => new UtilityStep(),
+                    _ => throw new ArgumentException("Invalid pipeline step type")
+                };
+                steps.Add(step);
+            }
+            pipeline.SetSteps(steps);
+            sprint.SetPipeline(pipeline);
+            AnsiConsole.MarkupLine($"[green]Set pipeline:[/] {pipelineType} for sprint {sprint.GetName()} in project {project.GetName()}");
+        });
+
         rootCommand.Add(createTeamMemberCommand);
         rootCommand.Add(createProjectCommand);
         rootCommand.Add(deleteProjectCommand);
@@ -799,6 +852,7 @@ class Program {
         rootCommand.Add(enterSCMCommand);
         rootCommand.Add(testSprintItemCommand);
         rootCommand.Add(definitionOfDoneSprintItemCommand);
+        rootCommand.Add(setPipelineCommand);
         rootCommand.Add(quit);
 
         var commandGroups = new Dictionary<string, List<Command>>
@@ -830,6 +884,7 @@ class Program {
                     stopSprintCommand,
                     addSprintItemCommand,
                     deleteSprintItemCommand,
+                    setPipelineCommand,
                     addPipelineStepCommand,
                     removePipelineStepCommand,
                     startSprintReleaseCommand,
@@ -856,6 +911,7 @@ class Program {
                 "Pipelines",
                 [
                     printPipelineCommand,
+                    setPipelineCommand,
                     addPipelineStepCommand,
                     removePipelineStepCommand,
                     startSprintReleaseCommand,

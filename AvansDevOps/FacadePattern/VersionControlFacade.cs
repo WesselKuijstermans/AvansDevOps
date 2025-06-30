@@ -5,8 +5,8 @@ using Spectre.Console;
 namespace AvansDevOps.FacadePattern {
     public class VersionControlFacade(IVersionControlStrategy strategy, SprintItem sprintItem) {
         private readonly IVersionControlStrategy Strategy = strategy;
-        private readonly List<Branch> Branches = [];
         public SprintItem SprintItem { get; } = sprintItem;
+        private readonly List<Branch> Branches = [];
         public Branch? CurrentBranch { get; set; } = null;
 
         public void AddBranch(Branch branch) {
@@ -16,6 +16,9 @@ namespace AvansDevOps.FacadePattern {
         public void RemoveBranch(string branchName) {
             Branch? branchToRemove = Branches.FirstOrDefault(b => b.Name == branchName);
             if (branchToRemove != null) {
+                if (CurrentBranch == branchToRemove) {
+                    CurrentBranch = null; // Clear current branch if it's being removed
+                }
                 Branches.Remove(branchToRemove);
             } else {
                 AnsiConsole.WriteLine($"Branch '{branchName}' does not exist.");

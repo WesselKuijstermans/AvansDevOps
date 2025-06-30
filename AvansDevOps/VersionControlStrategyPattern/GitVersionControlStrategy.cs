@@ -6,10 +6,13 @@ namespace AvansDevOps.VersionControlStrategyPattern {
     public class GitVersionControlStrategy : IVersionControlStrategy {
 
         public bool BranchExists(VersionControlFacade facade, string branchName) {
-            int seed = branchName.GetHashCode();
-            Random rnd = new Random(seed);
-
-            bool result = rnd.Next(1) == 0;
+            // Deterministically generate a seed from the branchName using ASCII values
+            int seed = 0;
+            foreach (char c in branchName.ToLowerInvariant()) {
+                seed = (seed * 31) + c;
+            }
+            var random = new Random(seed);
+            bool result = random.Next(0, 2) == 0; // 50% chance, deterministic for each branchName
             if (result) {
                 AnsiConsole.WriteLine($"Branch '{branchName}' found.");
             } else {
@@ -23,7 +26,7 @@ namespace AvansDevOps.VersionControlStrategyPattern {
                 AnsiConsole.WriteLine("No branch selected. Please select a branch before committing.");
             } else {
                 AnsiConsole.WriteLine($"Committing changes to branch '{facade.CurrentBranch.Name}' with message: '{message}' by {teamMember.GetName()}.");
-                facade.CurrentBranch.addCommit(new Commit(message, teamMember));
+                facade.CurrentBranch.AddCommit(new Commit(message, teamMember));
             }
         }
 

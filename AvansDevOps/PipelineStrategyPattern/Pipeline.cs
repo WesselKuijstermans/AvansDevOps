@@ -38,5 +38,10 @@ namespace AvansDevOps.PipelineStrategyPattern {
         internal List<IPipelineStep> StepsList() {
             return steps;
         }
+
+        public void SetSteps(List<IPipelineStep> steps) {
+            this.steps.Clear();
+            this.steps.AddRange(steps);
+        }
     }
 }

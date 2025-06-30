@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AvansDevOps.Entities {
+    public class Commit(string message, TeamMember teamMember) {
+        private readonly string Message = message;
+        private readonly TeamMember TeamMember = teamMember;
+        private readonly DateTime Timestamp = DateTime.Now;
 
-namespace AvansDevOps.Entities
-{
-    public class Commit(string name, TeamMember teamMember)
-    {
-        private string Name { get; set; } = name;
-        private TeamMember TeamMember { get; } = teamMember;
-        private DateTime timestamp { get; } = DateTime.Now;
+        public string GetMessage() {
+            return Message;
+        }
+
+        public TeamMember GetTeamMember() {
+            return TeamMember;
+        }
+
+        public DateTime GetTimestamp() {
+            return Timestamp;
+        }
     }
 }
