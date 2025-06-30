@@ -146,5 +146,35 @@ namespace AvansDevOps {
             }
 
         }
+
+        public static (Project?, Sprint?, SprintItem?) GetSprintItem(List<Project> projects) {
+            string noProjectsResponse = "[red]No projects available. Please create a project first.[/]";
+            string noSprintsRespone = "[red]No sprints available in this project.[/]";
+            string noItemsResponse = "[red]No items available in this sprint.[/]";
+
+            if (projects.Count == 0) {
+                AnsiConsole.MarkupLine(noProjectsResponse);
+                return (null, null, null);
+            }
+            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to test a sprint item in:", projects);
+            if (project == null)
+                return (null, null, null); // User cancelled selection
+            if (project.GetSprints().Count == 0) {
+                AnsiConsole.MarkupLine(noSprintsRespone);
+                return (project, null, null);
+            }
+            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to test a sprint item in:", project.GetSprints());
+            if (sprint == null)
+                return (project, null, null); // User cancelled selection
+            var sprintBacklogItems = sprint.GetSprintBacklog();
+            if (sprintBacklogItems.Count == 0) {
+                AnsiConsole.MarkupLine(noItemsResponse);
+                return (project, sprint, null);
+            }
+            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to test:", sprintBacklogItems);
+            if (item == null)
+                return (project, sprint, null); // User cancelled selection
+            return (project, sprint, item);
+        }
     }
 }

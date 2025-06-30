@@ -37,7 +37,6 @@ static class Program {
 
         string noProjectsResponse = "[red]No projects available. Please create a project first.[/]";
         string noSprintsRespone = "[red]No sprints available in this project.[/]";
-        string noItemsResponse = "[red]No items available in this sprint.[/]";
         string stateSuffix = "State";
 
 
@@ -291,28 +290,10 @@ static class Program {
 
         var deleteSprintItemCommand = new Command("delete-sprint-item", "Delete an item from a sprint");
         deleteSprintItemCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            if (sprint == null || item == null) {
                 return;
             }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to delete a sprint item from:", projects);
-            if (project == null)
-                return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to delete an item from:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            var sprintBacklogItems = sprint.GetSprintBacklog();
-            if (sprintBacklogItems.Count == 0) {
-                AnsiConsole.MarkupLine(noItemsResponse);
-                return;
-            }
-            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to delete:", sprintBacklogItems);
-            if (item == null)
-                return; // User cancelled selection
             sprint.RemoveSprintItem(item);
             AnsiConsole.MarkupLine($"[green]Deleted sprint item:[/] {item.GetBacklogItem().GetTask()} from sprint {sprint.GetName()} in project {project.GetName()}");
         });
@@ -424,60 +405,24 @@ static class Program {
 
         var addMessageToSprintItemCommand = new Command("post-message-to-sprint-item", "Add a message to a sprint item");
         addMessageToSprintItemCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
-                return;
-            }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to add a message to a sprint item in:", projects);
-            if (project == null)
-                return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
             TeamMember? teamMember = ConsoleInputHelper.ListSelection<TeamMember>("Select a team member to post the message as:", project.GetTeamMembers());
             if (teamMember == null)
-                return; // User cancelled selection
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to add a message to an item in:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            var sprintBacklogItems = sprint.GetSprintBacklog();
-            if (sprintBacklogItems.Count == 0) {
-                AnsiConsole.MarkupLine(noItemsResponse);
-                return;
-            }
-            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to add a message to:", sprintBacklogItems);
-            if (item == null)
                 return; // User cancelled selection
             string message = ConsoleInputHelper.UserInput("Enter the message to post");
             if (message == string.Empty)
                 return; // User cancelled input
+            if (item == null || sprint == null || project == null) {
+                AnsiConsole.MarkupLine("[red]Invalid selection. Please try again.[/]");
+                return;
+            }
             item.AddMessage(new FormMessage(teamMember, message));
             AnsiConsole.MarkupLine($"[green]Added message:[/] {message} to sprint item {item.GetBacklogItem().GetTask()} in sprint {sprint.GetName()} of project {project.GetName()}");
         });
 
         var getMessagesFromSprintItemCommand = new Command("get-messages-from-sprint-item", "Get messages from a sprint item");
         getMessagesFromSprintItemCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
-                return;
-            }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to get messages from sprint items in:", projects);
-            if (project == null)
-                return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to get messages from sprint items in:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            var sprintBacklogItems = sprint.GetSprintBacklog();
-            if (sprintBacklogItems.Count == 0) {
-                AnsiConsole.MarkupLine(noItemsResponse);
-                return;
-            }
-            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to get messages from:", sprintBacklogItems);
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             var messages = item.GetMessages();
@@ -611,26 +556,7 @@ static class Program {
 
         var printSprintItemCommand = new Command("print-sprint-item", "Print the details of a sprint item");
         printSprintItemCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
-                return;
-            }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to print sprint item details for:", projects);
-            if (project == null)
-                return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to print sprint item details for:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            var sprintBacklogItems = sprint.GetSprintBacklog();
-            if (sprintBacklogItems.Count == 0) {
-                AnsiConsole.MarkupLine(noItemsResponse);
-                return;
-            }
-            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to print details for:", sprintBacklogItems);
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             AnsiConsole.MarkupLine($"[blue]Sprint Item:[/] {item.GetBacklogItem().GetTask()}");
@@ -656,27 +582,8 @@ static class Program {
 
         var assignDeveloperToSprintItemCommand = new Command("assign-developer-to-sprint-item", "Assign a developer to a sprint item");
         assignDeveloperToSprintItemCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
-                return;
-            }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to assign a developer to a sprint item in:", projects);
-            if (project == null)
-                return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to assign a developer to an item in:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            var sprintBacklogItems = sprint.GetSprintBacklog();
-            if (sprintBacklogItems.Count == 0) {
-                AnsiConsole.MarkupLine(noItemsResponse);
-                return;
-            }
-            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to assign a developer to:", sprintBacklogItems);
-            if (item == null)
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            if (project == null || item == null)
                 return; // User cancelled selection
             TeamMember? developer = ConsoleInputHelper.ListSelection<TeamMember>("Select a developer to assign to the sprint item:", project.GetTeamMembers().Where(tm => tm is Developer));
             if (developer == null)
@@ -686,61 +593,24 @@ static class Program {
 
         var enterSCMCommand = new Command("enter-scm", "Enter the source control management (SCM) interface");
         enterSCMCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
-                return;
-            }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project:", projects);
-            if (project == null)
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            if (project == null || sprint == null || item == null)
                 return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to enter SCM for:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            if (sprint.GetSprintBacklog().Count == 0) {
-                AnsiConsole.MarkupLine("[red]No sprint items available in this sprint.[/]");
-                return;
-            }
-            SprintItem? sprintItem = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to enter SCM for:", sprint.GetSprintBacklog());
-            if (sprintItem == null)
-                return; // User cancelled selection
-            AnsiConsole.MarkupLine($"[blue]Entering SCM interface for sprint item:[/] {sprintItem.GetBacklogItem().GetTask()} in sprint {sprint.GetName()} of project {project.GetName()}");
+            AnsiConsole.MarkupLine($"[blue]Entering SCM interface for sprint item:[/] {item.GetBacklogItem().GetTask()} in sprint {sprint.GetName()} of project {project.GetName()}");
             while (true) {
                 var command = ConsoleInputHelper.UserInput(string.Empty);
                 if (string.IsNullOrWhiteSpace(command)) {
                     AnsiConsole.MarkupLine("[yellow]Exiting SCM cli.[/]");
                     break;
                 } else {
-                    ConsoleInputHelper.HandleSCMCommand(command, sprintItem);
+                    ConsoleInputHelper.HandleSCMCommand(command, item);
                 }
             }
         });
 
         var testSprintItemCommand = new Command("test-sprint-item", "Test a sprint item");
         testSprintItemCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
-                return;
-            }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to test a sprint item in:", projects);
-            if (project == null)
-                return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to test a sprint item in:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            var sprintBacklogItems = sprint.GetSprintBacklog();
-            if (sprintBacklogItems.Count == 0) {
-                AnsiConsole.MarkupLine(noItemsResponse);
-                return;
-            }
-            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to test:", sprintBacklogItems);
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             bool success = ConsoleInputHelper.BoolUserInput("Tests executed successfully?", true);
@@ -753,26 +623,7 @@ static class Program {
 
         var definitionOfDoneSprintItemCommand = new Command("definition-of-done-sprint-item", "Check the definition of done for a sprint item");
         definitionOfDoneSprintItemCommand.SetAction((context) => {
-            if (projects.Count == 0) {
-                AnsiConsole.MarkupLine(noProjectsResponse);
-                return;
-            }
-            Project? project = ConsoleInputHelper.ListSelection<Project>("Select a project to check the definition of done for sprint items in:", projects);
-            if (project == null)
-                return; // User cancelled selection
-            if (project.GetSprints().Count == 0) {
-                AnsiConsole.MarkupLine(noSprintsRespone);
-                return;
-            }
-            Sprint? sprint = ConsoleInputHelper.ListSelection<Sprint>("Select a sprint to check the definition of done for sprint items in:", project.GetSprints());
-            if (sprint == null)
-                return; // User cancelled selection
-            var sprintBacklogItems = sprint.GetSprintBacklog();
-            if (sprintBacklogItems.Count == 0) {
-                AnsiConsole.MarkupLine(noItemsResponse);
-                return;
-            }
-            SprintItem? item = ConsoleInputHelper.ListSelection<SprintItem>("Select a sprint item to check the definition of done for:", sprintBacklogItems);
+            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             item.DefinitionOfDoneCheck();
