@@ -1,10 +1,10 @@
 ﻿using System.CommandLine;
 using System.Diagnostics.CodeAnalysis;
-using AvansDevOps.AdapterPattern;
 using AvansDevOps.Entities;
 using AvansDevOps.Enums;
 using AvansDevOps.FactoryPattern;
 using AvansDevOps.ItemStatePattern;
+using AvansDevOps.NotificationAdapterPattern;
 using AvansDevOps.PipelineStrategyPattern;
 using AvansDevOps.SprintStateObersverPattern;
 using AvansDevOps.VersionControlStrategyPattern;
@@ -38,6 +38,7 @@ static class Program {
         string noProjectsResponse = "[red]No projects available. Please create a project first.[/]";
         string noSprintsRespone = "[red]No sprints available in this project.[/]";
         string noItemsResponse = "[red]No items available in this sprint.[/]";
+        string stateSuffix = "State";
 
 
         var createTeamMemberCommand = new Command("create-team-member", "Add a team member to a project");
@@ -564,15 +565,15 @@ static class Program {
             AnsiConsole.MarkupLine($"[blue]Sprint Name:[/] {sprint.GetName()}");
             AnsiConsole.MarkupLine($"[blue]Start Date:[/] {sprint.GetStartDate()}");
             AnsiConsole.MarkupLine($"[blue]End Date:[/] {sprint.GetEndDate()}");
-            AnsiConsole.MarkupLine($"[blue]State:[/] {sprint.GetState().GetType().Name.Replace("State", string.Empty)}");
+            AnsiConsole.MarkupLine($"[blue]State:[/] {sprint.GetState().GetType().Name.Replace(stateSuffix, string.Empty)}");
             if (sprint.GetSummary() != string.Empty) {
                 AnsiConsole.MarkupLine($"[blue]Summary:[/] \n {sprint.GetSummary()}");
             }
             var table = new Table();
             table.AddColumn("Backlog Item");
-            table.AddColumn("State");
+            table.AddColumn(stateSuffix);
             foreach (var item in sprint.GetSprintBacklog()) {
-                table.AddRow(item.GetBacklogItem().GetTask(), item.GetState().GetType().Name.Replace("State", string.Empty));
+                table.AddRow(item.GetBacklogItem().GetTask(), item.GetState().GetType().Name.Replace(stateSuffix, string.Empty));
             }
             AnsiConsole.Write(table);
         });
@@ -634,8 +635,8 @@ static class Program {
                 return; // User cancelled selection
             AnsiConsole.MarkupLine($"[blue]Sprint Item:[/] {item.GetBacklogItem().GetTask()}");
             var state = item.GetState();
-            AnsiConsole.MarkupLine($"[blue]State:[/] {state.GetType().Name.Replace("State", string.Empty)}");
-            if (state is not TodoState or DoingState && item.versionControlFacade.CurrentBranch is not null) {
+            AnsiConsole.MarkupLine($"[blue]State:[/] {state.GetType().Name.Replace(stateSuffix, string.Empty)}");
+            if (state is not TodoState or DoingState && item.versionControlFacade!.CurrentBranch is not null) {
                 AnsiConsole.MarkupLine($"[blue]Changes pushed to branch:[/] {item.versionControlFacade.CurrentBranch.Name}");
             }
             AnsiConsole.MarkupLine($"[blue]Assigned Developer:[/] {item.GetDeveloper()?.GetName() ?? "None"}");

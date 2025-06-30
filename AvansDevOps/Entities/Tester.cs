@@ -1,13 +1,6 @@
-﻿using AvansDevOps.AdapterPattern;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AvansDevOps.NotificationAdapterPattern;
 
-namespace AvansDevOps.Entities
-{
-    public class Tester(string name, INotificationAdapter notificationAdapter) : TeamMember(name, notificationAdapter)
-    {
+namespace AvansDevOps.Entities {
+    public class Tester(string name, INotificationAdapter notificationAdapter) : TeamMember(name, notificationAdapter) {
     }
 }

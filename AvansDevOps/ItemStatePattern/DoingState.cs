@@ -12,7 +12,7 @@ namespace AvansDevOps.ItemStatePattern {
 
         public void ReadyForTesting() {
             Developer? developer = _sprintItem.GetDeveloper();
-            if (_sprintItem.versionControlFacade.CurrentBranch != null && developer != null) {
+            if (_sprintItem.versionControlFacade!.CurrentBranch != null && developer != null) {
                 string branch = _sprintItem.versionControlFacade.CurrentBranch.Name;
                 AnsiConsole.WriteLine($"implementation for item '{_sprintItem.GetBacklogItem().GetTask()}' has been pushed to branch '{branch}' and is ready for testing");
                 _sprintItem.SetState(new ReadyForTestingState(_sprintItem));

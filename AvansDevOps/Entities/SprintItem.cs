@@ -29,7 +29,7 @@ namespace AvansDevOps.Entities {
             this.subtasks.Add(sprintItem);
         }
 
-        public void SetDeveloper(TeamMember teamMember) {
+        public void SetDeveloper(TeamMember? teamMember) {
             if (teamMember is Developer || teamMember is LeadDeveloper || teamMember is null) {
                 this.developer = teamMember;
             } else {
@@ -87,23 +87,23 @@ namespace AvansDevOps.Entities {
         }
 
         public void PullBranch(string branchName) {
-            versionControlFacade.Pull(branchName);
+            versionControlFacade!.Pull(branchName);
         }
 
         public void CheckoutBranch(string branchName) {
-            versionControlFacade.Checkout(branchName);
+            versionControlFacade!.Checkout(branchName);
         }
 
         public void Commit(string message) {
             if (this.developer is not null) {
-                versionControlFacade.Commit(message, this.developer);
+                versionControlFacade!.Commit(message, this.developer);
             } else {
                 AnsiConsole.WriteLine("No developer assigned to commit changes.");
             }
         }
 
         public void Push() {
-            versionControlFacade.Push();
+            versionControlFacade!.Push();
         }
 
         public void AddMessage(FormMessage message) {

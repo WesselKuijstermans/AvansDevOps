@@ -6,7 +6,7 @@ using Spectre.Console;
 namespace AvansDevOps {
 
     [ExcludeFromCodeCoverage]
-    public class ConsoleInputHelper {
+    public static class ConsoleInputHelper {
 
         public static string[] ParseCommandLine(string commandLine) {
             var args = new List<string>();
@@ -101,7 +101,7 @@ namespace AvansDevOps {
         }
 
         public static void HandleSCMCommand(string command, SprintItem sprintItem) {
-            string commandBase = sprintItem.versionControlFacade.GetStrategy().GetType().Name.ToLowerInvariant().Replace("versioncontrolstrategy", string.Empty);
+            string commandBase = sprintItem.versionControlFacade!.GetStrategy().GetType().Name.ToLowerInvariant().Replace("versioncontrolstrategy", string.Empty);
             string[] parts = command.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 0) {
                 AnsiConsole.MarkupLine("[red]No command provided.[/]");

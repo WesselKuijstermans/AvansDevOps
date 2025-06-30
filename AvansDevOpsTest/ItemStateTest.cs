@@ -20,7 +20,8 @@ namespace AvansDevOpsTest {
             project.AddSprint(project.GetName() + "-1", DateTime.Now, DateTime.Now.AddDays(14), new TestPipeline(), notificationService);
             this.sprint = project.GetSprints()[0];
             this.item = new SprintItem(new BacklogItem("Test Task", 2), notificationService, notificationService, null);
-            this.item.versionControlFacade = new VersionControlFacade(new GitVersionControlStrategy(), item);
+            this.versionControlFacade = new VersionControlFacade(new GitVersionControlStrategy(), item);
+            this.item.versionControlFacade = versionControlFacade;
             this.item.versionControlFacade.Pull("Main");
             this.developer = new Developer("Test Developer", new EmailAdapter("test@gmail.com"));
             this.project.AddTeamMember(developer);

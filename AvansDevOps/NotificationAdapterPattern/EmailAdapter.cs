@@ -1,6 +1,6 @@
 ﻿using AvansDevOps.Entities;
 
-namespace AvansDevOps.AdapterPattern {
+namespace AvansDevOps.NotificationAdapterPattern {
     public class EmailAdapter(string email) : INotificationAdapter {
         private readonly string _email = email;
 

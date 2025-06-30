@@ -99,11 +99,11 @@ namespace AvansDevOps.Entities {
         }
 
         public void AddStepToPipeline(IPipelineStep step) {
-            this.pipeline.AddStep(step);
+            this.pipeline!.AddStep(step);
         }
 
         public void RemoveStepFromPipeline(IPipelineStep step) {
-            this.pipeline.RemoveStep(step);
+            this.pipeline!.RemoveStep(step);
         }
 
         public List<IPipelineStep>? GetPipelineSteps() {
@@ -119,7 +119,7 @@ namespace AvansDevOps.Entities {
         }
 
         public bool RunPipeline() {
-            return this.pipeline.RunPipeline(true);
+            return this.pipeline!.RunPipeline(true);
         }
 
         public void SetState(ISprintState state) {

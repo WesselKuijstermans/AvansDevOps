@@ -1,6 +1,6 @@
 ﻿using AvansDevOps.Entities;
 
-namespace AvansDevOps.AdapterPattern {
+namespace AvansDevOps.NotificationAdapterPattern {
     public class SlackAdapter(string slackToken) : INotificationAdapter {
         private readonly string _slackToken = slackToken;
         public void Notify(TeamMember teamMember, string subject, string message) {

@@ -49,7 +49,7 @@ namespace AvansDevOps.VersionControlStrategyPattern {
         public void Push(VersionControlFacade facade) {
             if (facade.CurrentBranch != null) {
                 AnsiConsole.WriteLine($"Pushing changes to branch '{facade.CurrentBranch.Name}'...");
-                facade.SprintItem.ReadyForTesting();
+                facade.SprintItem!.ReadyForTesting();
             } else {
                 AnsiConsole.WriteLine("No branch selected. Please select a branch before pushing.");
             }
