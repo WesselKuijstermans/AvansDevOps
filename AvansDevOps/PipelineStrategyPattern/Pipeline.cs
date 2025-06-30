@@ -18,15 +18,16 @@ namespace AvansDevOps.PipelineStrategyPattern {
 
         abstract public List<IPipelineStep> GetSteps();
 
-        public virtual bool RunPipeline(bool result) {
+        public bool RunPipeline(bool result) {
+            var steps = GetSteps();
             if (steps.Count > 0) {
                 foreach (IPipelineStep step in steps) {
                     step.Execute();
                 }
-                if (result) {
-                    AnsiConsole.WriteLine("Pipeline successful");
+                if (!result) {
+                    AnsiConsole.WriteLine("Pipeline failed.");
                 } else {
-                    AnsiConsole.WriteLine("Pipeline failed");
+                    AnsiConsole.WriteLine("Pipeline succeeded.");
                 }
                 return result;
             } else {

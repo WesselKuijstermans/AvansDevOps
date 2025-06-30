@@ -5,7 +5,7 @@ namespace AvansDevOps.SprintStatePattern {
     public class ConceptSprintState(Sprint sprint) : ISprintState {
         private readonly Sprint _sprint = sprint;
 
-        public bool StartRelease() {
+        public bool StartRelease(bool result) {
             AnsiConsole.WriteLine("Sprint not started yet. Wait until the sprint is done to start release");
             return false;
         }

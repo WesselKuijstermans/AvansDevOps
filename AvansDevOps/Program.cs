@@ -511,7 +511,7 @@ static class Program {
             if (sprint == null)
                 return; // User cancelled selection
             AnsiConsole.MarkupLine($"[green]Started release for sprint:[/] {sprint.GetName()} in project {project.GetName()}");
-            var result = sprint.StartRelease();
+            var result = sprint.StartRelease(true);
             if (result) {
                 AnsiConsole.MarkupLine("[green]Release completed successfully![/]");
             } else {

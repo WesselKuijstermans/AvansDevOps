@@ -29,38 +29,38 @@ namespace AvansDevOpsTest {
 
         [Fact]
         public void VersionControlFacade_Pull_Should_Load_Branch_And_Set_As_CurrentBranch_If_Branch_Exists() {
-            item.versionControlFacade!.Pull("Main");
-            Assert.Contains(item.versionControlFacade.getBranches(), b => b.Name == "Main");
+            item.PullBranch("Main");
+            Assert.Contains(item.versionControlFacade!.getBranches(), b => b.Name == "Main");
             Assert.Equal("Main", item.versionControlFacade.CurrentBranch?.Name);
         }
 
         [Fact]
         public void VersionControlFacade_Pull_Should_Abort_If_Branch_Not_Exists() {
-            item.versionControlFacade!.Pull("Nope");
-            Assert.DoesNotContain(item.versionControlFacade.getBranches(), b => b.Name == "Nope");
+            item.PullBranch("Nope");
+            Assert.DoesNotContain(item.versionControlFacade!.getBranches(), b => b.Name == "Nope");
             Assert.Null(item.versionControlFacade.CurrentBranch);
         }
 
         [Fact]
         public void VersionControlFacade_Checkout_Should_Set_CurrentBranch_If_Branch_Exists() {
             item.versionControlFacade!.AddBranch(new Branch("Feature1"));
-            item.versionControlFacade.Checkout("Feature1");
+            item.CheckoutBranch("Feature1");
             Assert.Contains(item.versionControlFacade.getBranches(), b => b.Name == "Feature1");
             Assert.Equal("Feature1", item.versionControlFacade.CurrentBranch?.Name);
         }
 
         [Fact]
         public void VersionControlFacade_Checkout_Should_Not_Set_CurrentBranch_If_Branch_Not_Exists() {
-            item.versionControlFacade!.Checkout("NonExistentBranch");
-            Assert.DoesNotContain(item.versionControlFacade.getBranches(), b => b.Name == "NonExistentBranch");
+            item.CheckoutBranch("NonExistentBranch");
+            Assert.DoesNotContain(item.versionControlFacade!.getBranches(), b => b.Name == "NonExistentBranch");
             Assert.Null(item.versionControlFacade.CurrentBranch);
         }
 
         [Fact]
-        public void VersionControlFacade_Commit_Should_Add_Commit_To_CurrentBranch() {
-            item.versionControlFacade!.Pull("Main");
-            item.versionControlFacade.Commit("Initial commit", developer);
-            Assert.Equal(1, item.versionControlFacade.CurrentBranch?.GetCommits().Count);
+        public void VersionControlFacade_Commit_Should_Add_Commit_To_CurrentBranch_If_Developer_Assigned() {
+            item.PullBranch("Main");
+            item.Commit("Initial commit");
+            Assert.Equal(1, item.versionControlFacade!.CurrentBranch?.GetCommits().Count);
             var commit = item.versionControlFacade.CurrentBranch?.GetCommits()[0];
             Assert.NotNull(commit);
             Assert.Equal("Initial commit", commit.GetMessage());
@@ -68,31 +68,40 @@ namespace AvansDevOpsTest {
         }
 
         [Fact]
+        public void VersionControlFacade_Commit_Should_Abort_If_No_Developer_Assigned() {
+            item.SetDeveloper(null);
+            item.PullBranch("Main");
+            item.Commit("Initial commit");
+            Assert.Empty(item.versionControlFacade!.CurrentBranch?.GetCommits() ?? []);
+            Assert.IsType<DoingState>(item.GetState());
+        }
+
+        [Fact]
         public void VersionControlFacade_Push_Should_Set_SprintItem_To_ReadyForTesting() {
-            item.versionControlFacade!.Pull("Main");
-            item.versionControlFacade.Push();
+            item.PullBranch("Main");
+            item.Push();
             Assert.IsType<ReadyForTestingState>(item.GetState());
         }
 
         [Fact]
         public void VersionControlFacade_Push_Should_Abort_If_No_CurrentBranch() {
-            item.versionControlFacade!.Push();
+            item.Push();
             Assert.IsType<DoingState>(item.GetState());
         }
 
         [Fact]
         public void VersionControlFacade_RemoveBranch_Should_Remove_Branch_And_CurrentBranch_If_CurrentBranch() {
-            item.versionControlFacade!.Pull("Main");
-            item.versionControlFacade.RemoveBranch("Main");
+            item.PullBranch("Main");
+            item.versionControlFacade!.RemoveBranch("Main");
             Assert.DoesNotContain(item.versionControlFacade.getBranches(), b => b.Name == "Main");
             Assert.Null(item.versionControlFacade.CurrentBranch);
         }
 
         [Fact]
         public void VersionControlFacade_RemoveBranch_Should_Only_Remove_Branch_If_Not_CurrentBranch() {
-            item.versionControlFacade!.Pull("Main");
-            item.versionControlFacade.Pull("Dev");
-            item.versionControlFacade.RemoveBranch("Main");
+            item.PullBranch("Main");
+            item.PullBranch("Dev");
+            item.versionControlFacade!.RemoveBranch("Main");
             Assert.DoesNotContain(item.versionControlFacade.getBranches(), b => b.Name == "Main");
             Assert.Contains(item.versionControlFacade.getBranches(), b => b.Name == "Dev");
             Assert.Equal("Dev", item.versionControlFacade.CurrentBranch?.Name);

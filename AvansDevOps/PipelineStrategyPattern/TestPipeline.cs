@@ -1,34 +1,14 @@
-﻿using Spectre.Console;
-
-namespace AvansDevOps.PipelineStrategyPattern {
+﻿namespace AvansDevOps.PipelineStrategyPattern {
     public class TestPipeline : Pipeline {
         public override List<IPipelineStep> GetSteps() {
-            return [.. base.StepsList(), new TestStep()];
-        }
-
-        public override bool RunPipeline(bool result) {
-            var steps = GetSteps();
-            if (steps.Count > 0) {
-                bool hasTestStep = false;
-                foreach (IPipelineStep step in steps) {
-                    if (step is TestStep) {
-                        hasTestStep = true;
-                    }
-                    step.Execute();
-                }
-                if (!hasTestStep) {
-                    new TestStep().Execute();
-                }
-                if (!result) {
-                    AnsiConsole.WriteLine("Pipeline failed.");
-                } else {
-                    AnsiConsole.WriteLine("Pipeline succeeded.");
-                }
-                return result;
-            } else {
-                AnsiConsole.WriteLine("No steps in the pipeline.");
-                return false;
+            var stepsToReturn = base.StepsList();
+            if (stepsToReturn.Count == 0) {
+                return stepsToReturn;
             }
+            if (!stepsToReturn.Any(step => step is TestStep)) {
+                stepsToReturn.Add(new TestStep());
+            }
+            return stepsToReturn;
         }
     }
 }

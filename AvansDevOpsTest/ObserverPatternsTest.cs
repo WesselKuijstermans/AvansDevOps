@@ -68,7 +68,7 @@ namespace AvansDevOpsTest {
         public void SprintStateObserver_Should_Notify_TeamMember_When_State_Stages() {
             sprint.StartSprint();
             sprint.StopSprint();
-            sprint.StartRelease();
+            sprint.StartRelease(true);
 
             mockSprintObserver.Verify(o => o.SprintUpdate(It.IsAny<InProgressSprintState>(), sprint), Times.Once);
             mockSprintObserver.Verify(o => o.SprintUpdate(It.IsAny<StoppedSprintState>(), sprint), Times.Once);

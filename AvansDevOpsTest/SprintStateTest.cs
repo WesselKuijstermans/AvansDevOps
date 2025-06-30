@@ -51,7 +51,7 @@ namespace AvansDevOpsTest {
         [Fact]
         public void StoppedSprintState_With_Pipeline_Should_Transition_To_FinishedSprintState_When_Starting_Release() {
             sprintWithPipeline.SetState(new StoppedSprintState(sprintWithPipeline));
-            sprintWithPipeline.StartRelease();
+            sprintWithPipeline.StartRelease(true);
             Assert.IsType<FinishedSprintState>(sprintWithPipeline.GetState());
         }
 
@@ -61,14 +61,14 @@ namespace AvansDevOpsTest {
             sprint.StartSprint();
             sprint.StopSprint();
             sprint.UploadSummary("Test");
-            sprint.StartRelease();
+            sprint.StartRelease(true);
             Assert.IsType<FinishedSprintState>(sprint.GetState());
         }
 
         [Fact]
         public void ConceptSprintState_Should_Not_Allow_Release_Summary_Or_Stop() {
             sprint.SetState(new ConceptSprintState(sprint));
-            sprint.StartRelease();
+            sprint.StartRelease(true);
             sprint.UploadSummary("Test");
             sprint.StopSprint();
             Assert.IsType<ConceptSprintState>(sprint.GetState());
@@ -77,7 +77,7 @@ namespace AvansDevOpsTest {
         [Fact]
         public void InProgressSprintState_Should_Not_Allow_Release_Summary_Or_Start() {
             sprint.SetState(new InProgressSprintState(sprint));
-            sprint.StartRelease();
+            sprint.StartRelease(true);
             sprint.UploadSummary("Test");
             sprint.StartSprint();
             Assert.IsType<InProgressSprintState>(sprint.GetState());
@@ -97,7 +97,7 @@ namespace AvansDevOpsTest {
             sprint.SetState(new StoppedSprintState(sprint));
             sprint.StartSprint();
             sprint.StopSprint();
-            sprint.StartRelease();
+            sprint.StartRelease(true);
             Assert.IsType<StoppedSprintState>(sprint.GetState());
         }
     }

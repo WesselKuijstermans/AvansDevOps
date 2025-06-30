@@ -5,7 +5,7 @@ namespace AvansDevOps.SprintStatePattern {
     public class StoppedSprintState(Sprint sprint) : ISprintState {
         private readonly Sprint _sprint = sprint;
 
-        public bool StartRelease() {
+        public bool StartRelease(bool result) {
             var pipelineSteps = _sprint.GetPipelineSteps();
             if (pipelineSteps == null) {
                 AnsiConsole.WriteLine("This is not a release sprint. Cannot start release.");
@@ -15,7 +15,7 @@ namespace AvansDevOps.SprintStatePattern {
                 return false;
             }
             AnsiConsole.WriteLine("Release started.");
-            if (_sprint.RunPipeline()) {
+            if (_sprint.RunPipeline(result)) {
                 AnsiConsole.WriteLine("Pipeline has successfully run! Sprint has been marked as finished");
                 _sprint.SetState(new FinishedSprintState());
                 return true;

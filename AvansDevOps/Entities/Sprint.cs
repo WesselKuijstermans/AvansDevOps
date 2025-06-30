@@ -94,8 +94,8 @@ namespace AvansDevOps.Entities {
             this.state.UploadSummary(summary);
         }
 
-        public bool StartRelease() {
-            return this.state.StartRelease();
+        public bool StartRelease(bool result) {
+            return this.state.StartRelease(result);
         }
 
         public void AddStepToPipeline(IPipelineStep step) {
@@ -118,8 +118,8 @@ namespace AvansDevOps.Entities {
             this.pipeline = pipeline;
         }
 
-        public bool RunPipeline() {
-            return this.pipeline!.RunPipeline(true);
+        public bool RunPipeline(bool result) {
+            return this.pipeline!.RunPipeline(result);
         }
 
         public void SetState(ISprintState state) {

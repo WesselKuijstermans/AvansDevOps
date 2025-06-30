@@ -4,7 +4,7 @@ namespace AvansDevOps.SprintStatePattern {
     public class FinishedSprintState() : ISprintState {
         readonly string message = "Sprint has been finalized. No more changes can be made.";
 
-        public bool StartRelease() {
+        public bool StartRelease(bool result) {
             AnsiConsole.WriteLine(message);
             return false;
         }
