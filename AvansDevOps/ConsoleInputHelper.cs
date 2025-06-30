@@ -1,8 +1,11 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using AvansDevOps.Entities;
 using Spectre.Console;
 
 namespace AvansDevOps {
+
+    [ExcludeFromCodeCoverage]
     public class ConsoleInputHelper {
 
         public string[] ParseCommandLine(string commandLine) {

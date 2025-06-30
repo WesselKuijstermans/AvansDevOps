@@ -1,4 +1,5 @@
 ﻿using System.CommandLine;
+using System.Diagnostics.CodeAnalysis;
 using AvansDevOps.AdapterPattern;
 using AvansDevOps.Entities;
 using AvansDevOps.Enums;
@@ -11,6 +12,7 @@ using Spectre.Console;
 
 namespace AvansDevOps;
 
+[ExcludeFromCodeCoverage]
 class Program {
     static async Task Main() {
         ConsoleInputHelper helper = new ConsoleInputHelper();
