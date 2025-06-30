@@ -291,7 +291,7 @@ static class Program {
         var deleteSprintItemCommand = new Command("delete-sprint-item", "Delete an item from a sprint");
         deleteSprintItemCommand.SetAction((context) => {
             var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
-            if (sprint == null || item == null) {
+            if (project == null || sprint == null || item == null) {
                 return;
             }
             sprint.RemoveSprintItem(item);
@@ -406,23 +406,23 @@ static class Program {
         var addMessageToSprintItemCommand = new Command("post-message-to-sprint-item", "Add a message to a sprint item");
         addMessageToSprintItemCommand.SetAction((context) => {
             var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            if (item == null || sprint == null || project == null) {
+                AnsiConsole.MarkupLine("[red]Invalid selection. Please try again.[/]");
+                return;
+            }
             TeamMember? teamMember = ConsoleInputHelper.ListSelection<TeamMember>("Select a team member to post the message as:", project.GetTeamMembers());
             if (teamMember == null)
                 return; // User cancelled selection
             string message = ConsoleInputHelper.UserInput("Enter the message to post");
             if (message == string.Empty)
                 return; // User cancelled input
-            if (item == null || sprint == null || project == null) {
-                AnsiConsole.MarkupLine("[red]Invalid selection. Please try again.[/]");
-                return;
-            }
             item.AddMessage(new FormMessage(teamMember, message));
             AnsiConsole.MarkupLine($"[green]Added message:[/] {message} to sprint item {item.GetBacklogItem().GetTask()} in sprint {sprint.GetName()} of project {project.GetName()}");
         });
 
         var getMessagesFromSprintItemCommand = new Command("get-messages-from-sprint-item", "Get messages from a sprint item");
         getMessagesFromSprintItemCommand.SetAction((context) => {
-            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            var (_, _, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             var messages = item.GetMessages();
@@ -556,7 +556,7 @@ static class Program {
 
         var printSprintItemCommand = new Command("print-sprint-item", "Print the details of a sprint item");
         printSprintItemCommand.SetAction((context) => {
-            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            var (_, _, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             AnsiConsole.MarkupLine($"[blue]Sprint Item:[/] {item.GetBacklogItem().GetTask()}");
@@ -582,7 +582,7 @@ static class Program {
 
         var assignDeveloperToSprintItemCommand = new Command("assign-developer-to-sprint-item", "Assign a developer to a sprint item");
         assignDeveloperToSprintItemCommand.SetAction((context) => {
-            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            var (project, _, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (project == null || item == null)
                 return; // User cancelled selection
             TeamMember? developer = ConsoleInputHelper.ListSelection<TeamMember>("Select a developer to assign to the sprint item:", project.GetTeamMembers().Where(tm => tm is Developer));
@@ -610,7 +610,7 @@ static class Program {
 
         var testSprintItemCommand = new Command("test-sprint-item", "Test a sprint item");
         testSprintItemCommand.SetAction((context) => {
-            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            var (_, _, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             bool success = ConsoleInputHelper.BoolUserInput("Tests executed successfully?", true);
@@ -623,7 +623,7 @@ static class Program {
 
         var definitionOfDoneSprintItemCommand = new Command("definition-of-done-sprint-item", "Check the definition of done for a sprint item");
         definitionOfDoneSprintItemCommand.SetAction((context) => {
-            var (project, sprint, item) = ConsoleInputHelper.GetSprintItem(projects);
+            var (_, _, item) = ConsoleInputHelper.GetSprintItem(projects);
             if (item == null)
                 return; // User cancelled selection
             item.DefinitionOfDoneCheck();
